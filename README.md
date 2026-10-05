@@ -79,6 +79,13 @@ tab, select port `8080`, open its forwarded address and add
 `/OpenClinica/MainMenu`. Forwarded ports are private by default; do not make
 this installation public because it uses known credentials.
 
+The development container itself is a prebuilt image
+(`ghcr.io/feststelltaste/openclinica-demo-devcontainer:latest`, built from
+`docker/devcontainer/`). The workflow `Devcontainer-Image` rebuilds it whenever
+something in that folder changes on `master`; it can also be started manually.
+The package must be public. Settings, extensions and the start commands stay in
+`.devcontainer/devcontainer.json` and need no image rebuild.
+
 Deleting a codespace also deletes its Docker volumes and uploaded CRFs.
 
 ### Notes for maintainers

@@ -1,18 +1,6 @@
 {
   "name": "OpenClinica",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/java:1": {
-      "version": "none",
-      "installMaven": true
-    },
-    "ghcr.io/devcontainers/features/docker-in-docker:4": {},
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
-    }
-  },
+  "image": "ghcr.io/feststelltaste/openclinica-demo-devcontainer:latest",
   "customizations": {
     "vscode": {
       "settings": {
@@ -29,7 +17,11 @@
     }
   },
   "postCreateCommand": "(bash .devcontainer/setup-pi.sh || echo 'Pi setup failed, continuing')",
-  "postStartCommand": ["bash", "-c", "source docker/test/base-url.sh && docker compose -f docker-compose.demo.yml up -d && bash docker/test/print-url.sh"],
+  "postStartCommand": [
+    "bash",
+    "-c",
+    "source docker/test/base-url.sh && docker compose -f docker-compose.demo.yml up -d && bash docker/test/print-url.sh"
+  ],
   "secrets": {
     "LITELLM_URL": {
       "description": "Base URL of the LLM API for the Pi coding agent, for example https://api.example.com/v1"
@@ -38,7 +30,9 @@
       "description": "API key for the LLM API used by the Pi coding agent"
     }
   },
-  "forwardPorts": [8080],
+  "forwardPorts": [
+    8080
+  ],
   "portsAttributes": {
     "8080": {
       "label": "OpenClinica",
