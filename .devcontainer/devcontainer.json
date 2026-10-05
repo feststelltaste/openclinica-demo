@@ -29,7 +29,7 @@
     }
   },
   "postCreateCommand": "(bash .devcontainer/setup-pi.sh || echo 'Pi setup failed, continuing') && COMPOSE_FILE=docker-compose.demo.yml bash docker/test/reset-demo-data.sh --yes",
-  "postStartCommand": "source docker/test/base-url.sh && docker compose -f docker-compose.demo.yml up -d && bash docker/test/print-url.sh",
+  "postStartCommand": ["bash", "-c", "source docker/test/base-url.sh && docker compose -f docker-compose.demo.yml up -d && bash docker/test/print-url.sh"],
   "secrets": {
     "LITELLM_URL": {
       "description": "Base URL of the LLM API for the Pi coding agent, for example https://api.example.com/v1"
