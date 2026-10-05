@@ -45,3 +45,4 @@ json.dump(models, open(os.path.join(pi_dir, "models.json"), "w"), indent=2)
 json.dump(settings, open(settings_path, "w"), indent=2)
 PY
 echo "Pi configured for $LITELLM_URL (default: ${LITELLM_MODEL:-eu.deepseek-v4.1-flash})"
+[[ -n "${PI_SKIP_CHECK:-}" ]] || bash "$(dirname "$0")/check-llm.sh" || true
