@@ -38,3 +38,15 @@ jobs:
           file: docker/Dockerfile
           push: true
           tags: ghcr.io/feststelltaste/openclinica-demo:${{ github.ref_name }}
+
+      - name: Demo-Daten erzeugen
+        run: bash docker/test/reset-demo-data.sh --yes
+
+      - name: Datenbank sichern
+        run: bash docker/test/dump-demo-data.sh docker/db/demo-data.sql.gz
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: docker/db
+          push: true
+          tags: ghcr.io/feststelltaste/openclinica-demo-db:${{ github.ref_name }}

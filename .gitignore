@@ -32,3 +32,5 @@ nb-configuration.xml
 /temp/
 __pycache__/
 *.py[cod]
+
+docker/db/demo-data.sql.gz

@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:11
+    image: ${OC_DB_IMAGE:-ghcr.io/feststelltaste/openclinica-demo-db:demo-v4}
     environment:
       POSTGRES_DB: openclinica
       POSTGRES_USER: clinica
@@ -14,7 +14,7 @@ services:
       - openclinica-test-db:/var/lib/postgresql/data
 
   openclinica:
-    image: ghcr.io/feststelltaste/openclinica-demo:demo-v3
+    image: ghcr.io/feststelltaste/openclinica-demo:demo-v4
     depends_on:
       database:
         condition: service_healthy

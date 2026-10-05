@@ -73,7 +73,8 @@ uses `docker-compose.test.yml`.
 
 The repository includes a development-container configuration. Create a
 codespace with at least four CPU cores. On creation, it starts the demo
-installation from the prebuilt image and loads the demo data. Open the `PORTS`
+installation from the prebuilt images; the demo data is already part of the
+database image. Open the `PORTS`
 tab, select port `8080`, open its forwarded address and add
 `/OpenClinica/MainMenu`. Forwarded ports are private by default; do not make
 this installation public because it uses known credentials.
@@ -86,15 +87,19 @@ The demo image is not built on every push, but only for a deliberately released
 state:
 
 1. Develop and test the changes.
-2. Tag the state, for example `git tag demo-v2 && git push origin demo-v2`.
+2. Tag the state, for example `git tag demo-v4 && git push origin demo-v4`.
 3. The GitHub Actions workflow `Demo-Image` builds the WAR and publishes
-   `ghcr.io/feststelltaste/openclinica-demo:demo-v2`. Wait until it is green.
-4. Set the image tag in `docker-compose.demo.yml` to the new version and commit.
+   `ghcr.io/feststelltaste/openclinica-demo:demo-v4` and
+   `ghcr.io/feststelltaste/openclinica-demo-db:demo-v4`. Wait until it is green.
+4. Set the image tags in `docker-compose.demo.yml` to the new version and commit.
 
-The image contains only the application. The demo data is not part of it; it is
-loaded reproducibly by `docker/test/reset-demo-data.sh`. The package must be
-public so that codespaces and other computers can pull the image without
-logging in.
+The workflow publishes two images for the tag: `openclinica-demo` contains the
+application, `openclinica-demo-db` is PostgreSQL with the migrated database and
+the demo data. The data is generated reproducibly by
+`docker/test/reset-demo-data.sh` and dumped by `docker/test/dump-demo-data.sh`;
+the database image restores it on the first start with an empty volume. Both
+packages must be public so that codespaces and other computers can pull them
+without logging in. Set the tag in `docker-compose.demo.yml` for both images.
 
 ## Request a feature
 
