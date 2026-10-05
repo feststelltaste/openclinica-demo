@@ -8,7 +8,10 @@
       "version": "none",
       "installMaven": true
     },
-    "ghcr.io/devcontainers/features/docker-in-docker:4": {}
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
   },
   "customizations": {
     "vscode": {
@@ -23,7 +26,7 @@
       ]
     }
   },
-  "postCreateCommand": "COMPOSE_FILE=docker-compose.demo.yml bash docker/test/reset-demo-data.sh --yes",
+  "postCreateCommand": "(npm install -g --ignore-scripts @earendil-works/pi-coding-agent && pi install npm:pi-subagents || echo 'Pi installation failed, continuing') && COMPOSE_FILE=docker-compose.demo.yml bash docker/test/reset-demo-data.sh --yes",
   "postStartCommand": "source docker/test/base-url.sh && docker compose -f docker-compose.demo.yml up -d && bash docker/test/print-url.sh",
   "forwardPorts": [8080],
   "portsAttributes": {
