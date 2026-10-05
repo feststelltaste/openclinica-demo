@@ -17,6 +17,8 @@
     "vscode": {
       "settings": {
         "redhat.telemetry.enabled": false,
+        "window.autoDetectColorScheme": false,
+        "workbench.colorTheme": "Default Light Modern",
         "workbench.secondarySideBar.defaultVisibility": "hidden"
       },
       "extensions": [
