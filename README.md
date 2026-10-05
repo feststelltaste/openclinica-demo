@@ -75,9 +75,28 @@ The repository includes a development-container configuration. Create a
 codespace with at least four CPU cores. On creation, it starts the demo
 installation from the prebuilt images; the demo data is already part of the
 database image. Open the `PORTS`
-tab, select port `8080`, open its forwarded address and add
-`/OpenClinica/MainMenu`. Forwarded ports are private by default; do not make
-this installation public because it uses known credentials.
+tab, select port `8080` and open its forwarded address; it redirects to
+OpenClinica. Sign in with `root` / `openclinica`. Forwarded ports are private by
+default; do not make this installation public because it uses known credentials.
+
+### Coding agent and notebooks
+
+The container includes the [Pi](https://pi.dev) coding agent with the
+`pi-subagents` extension, and JupyterLab with a Python kernel for notebooks.
+
+Pi talks to a LiteLLM instance. Run this once in the terminal and enter the URL
+and API key you were given:
+
+```bash
+bash .devcontainer/configure-llm.sh
+```
+
+Then start the agent with `pi`. The default model is `eu.deepseek-v4.1-flash`;
+`eu.glm-53-flash` and `eu.qwen3.8-flash-next` are available through `/model`.
+The key is stored only in `~/.pi/agent/models.json` inside the codespace.
+Maintainers can instead set the Codespaces secrets `LITELLM_URL` and
+`LITELLM_API_KEY` (optionally the environment variable `LITELLM_MODEL` for a
+different default model); they are picked up when the codespace is created.
 
 The development container itself is a prebuilt image
 (`ghcr.io/feststelltaste/openclinica-demo-devcontainer:latest`, built from
