@@ -18,9 +18,9 @@ import json, os, sys
 
 pi_dir = sys.argv[1]
 MODELS = [
+    ("eu.deepseek-v4.1-flash", "DeepSeek V4.1 Flash"),
     ("eu.glm-53-flash", "GLM 5.3 Flash"),
     ("eu.qwen3.8-flash-next", "Qwen 3.8 Flash Next"),
-    ("eu.deepseek-v4.1-flash", "DeepSeek V4.1 Flash"),
 ]
 model = os.environ.get("LITELLM_MODEL") or MODELS[0][0]
 # Secrets arrive as env vars, so only reference them; a key typed in by hand
@@ -44,4 +44,4 @@ settings.update({"defaultProvider": "litellm", "defaultModel": model})
 json.dump(models, open(os.path.join(pi_dir, "models.json"), "w"), indent=2)
 json.dump(settings, open(settings_path, "w"), indent=2)
 PY
-echo "Pi configured for $LITELLM_URL (default: ${LITELLM_MODEL:-eu.glm-53-flash})"
+echo "Pi configured for $LITELLM_URL (default: ${LITELLM_MODEL:-eu.deepseek-v4.1-flash})"
