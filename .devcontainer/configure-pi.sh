@@ -17,10 +17,12 @@ python3 - "$pi_dir" <<'PY'
 import json, os, sys
 
 pi_dir = sys.argv[1]
+# (id, name, context window). The windows are the figures published for the
+# models; LiteLLM's /model/info takes precedence if it reports a limit.
 MODELS = [
-    ("eu.deepseek-v4.1-flash", "DeepSeek V4.1 Flash"),
-    ("eu.glm-53-flash", "GLM 5.3 Flash"),
-    ("eu.qwen3.8-flash-next", "Qwen 3.8 Flash Next"),
+    ("eu.deepseek-v4.1-flash", "DeepSeek V4.1 Flash", 1000000),
+    ("eu.glm-53-flash", "GLM 5.3 Flash", 1310720),
+    ("eu.qwen3.8-flash-next", "Qwen 3.8 Flash Next", 262144),
 ]
 model = os.environ.get("LITELLM_MODEL") or MODELS[0][0]
 # Secrets arrive as env vars, so only reference them; a key typed in by hand
@@ -52,8 +54,8 @@ def limits():
 info = limits()
 
 
-def entry(model_id, name):
-    e = {"id": model_id, "name": name}
+def entry(model_id, name, context):
+    e = {"id": model_id, "name": name, "contextWindow": context}
     i = info.get(model_id, {})
     if i.get("max_input_tokens"):
         e["contextWindow"] = i["max_input_tokens"]
@@ -68,7 +70,7 @@ models = {
             "baseUrl": os.environ["LITELLM_URL"],
             "api": os.environ.get("LITELLM_API", "openai-completions"),
             "apiKey": api_key,
-            "models": [entry(i, n) for i, n in MODELS],
+            "models": [entry(i, n, c) for i, n, c in MODELS],
         }
     }
 }
