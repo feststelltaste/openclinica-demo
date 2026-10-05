@@ -28,7 +28,7 @@
     "8080": {
       "label": "OpenClinica",
       "protocol": "http",
-      "onAutoForward": "notify"
+      "onAutoForward": "openBrowser"
     }
   },
   "hostRequirements": {
