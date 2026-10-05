@@ -11,6 +11,7 @@ if [[ "${1:-}" != "--yes" ]]; then
     exit 2
 fi
 
+source "$repo_dir/docker/test/base-url.sh"
 compose=(docker compose -f "$compose_file")
 
 "${compose[@]}" down --volumes

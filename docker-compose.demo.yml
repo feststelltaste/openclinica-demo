@@ -18,7 +18,15 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    command:
+      - bash
+      - -c
+      - >-
+        sed -i "s|^sysURL=.*|sysURL=$${OC_BASE_URL}/OpenClinica/MainMenu|"
+        /usr/local/tomcat/openclinica.config/datainfo.properties
+        && exec catalina.sh run
     environment:
+      OC_BASE_URL: ${OC_BASE_URL:-http://127.0.0.1:8080}
       JAVA_OPTS: >-
         -Xms512m
         -Xmx1536m
