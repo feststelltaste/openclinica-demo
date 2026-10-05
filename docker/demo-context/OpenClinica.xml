@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Behind the Codespaces port forwarding Tomcat sees Host "localhost:8080".
+     Take scheme and host from the X-Forwarded-* headers so that redirects
+     (e.g. after login) point to the public URL. -->
+<Context>
+  <Valve className="org.apache.catalina.valves.RemoteIpValve"
+         internalProxies=".*"
+         protocolHeader="X-Forwarded-Proto"
+         hostHeader="X-Forwarded-Host" />
+</Context>

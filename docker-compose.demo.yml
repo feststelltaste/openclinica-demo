@@ -43,6 +43,7 @@ services:
     volumes:
       - openclinica-test-files:/usr/local/tomcat/openclinica.data
       - ./docker/demo-root:/usr/local/tomcat/webapps/ROOT:ro
+      - ./docker/demo-context/OpenClinica.xml:/usr/local/tomcat/conf/Catalina/localhost/OpenClinica.xml:ro
 
 volumes:
   openclinica-test-db:
