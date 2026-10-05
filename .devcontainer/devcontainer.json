@@ -8,6 +8,11 @@
     "vscode": {
       "settings": {
         "redhat.telemetry.enabled": false,
+        "chat.disableAIFeatures": true,
+        "chat.commandCenter.enabled": false,
+        "github.copilot.enable": {
+          "*": false
+        },
         "window.autoDetectColorScheme": false,
         "workbench.colorTheme": "Default Light Modern",
         "workbench.secondarySideBar.defaultVisibility": "hidden"
