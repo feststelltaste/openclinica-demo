@@ -8,8 +8,7 @@ dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
 while true; do
     read -r -p "LiteLLM URL: " LITELLM_URL
-    read -r -s -p "LiteLLM API key (input hidden): " LITELLM_API_KEY
-    echo
+    read -r -p "LiteLLM API key: " LITELLM_API_KEY
     read -r -p "Default model id [eu.deepseek-v4.1-flash]: " LITELLM_MODEL
     LITELLM_MODEL="${LITELLM_MODEL:-eu.deepseek-v4.1-flash}"
 
