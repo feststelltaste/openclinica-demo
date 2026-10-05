@@ -18,3 +18,10 @@ RUN python3 -m venv /opt/jupyter \
     && /opt/jupyter/bin/pip install --no-cache-dir jupyterlab ipykernel \
     && ln -s /opt/jupyter/bin/jupyter /usr/local/bin/jupyter \
     && ln -s /opt/jupyter/bin/jupyter-lab /usr/local/bin/jupyter-lab
+
+# Node.js and the Pi coding agent. This is installed here and not with the
+# Dev Container node feature because features are applied after this file.
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    && npm install -g --ignore-scripts @earendil-works/pi-coding-agent

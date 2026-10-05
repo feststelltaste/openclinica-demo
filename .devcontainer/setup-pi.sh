@@ -3,7 +3,8 @@
 # (Codespaces secrets), configures it via configure-pi.sh.
 set -euo pipefail
 
-npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+# Pi itself is part of the dev container image; install it only if missing.
+command -v pi >/dev/null || npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 pi install npm:pi-subagents
 
 bash "$(dirname "$0")/configure-pi.sh"
