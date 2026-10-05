@@ -9,5 +9,12 @@ RUN rm -f /etc/apt/sources.list.d/yarn.list
 # The base image ships only a minimal Python without the standard library
 # modules (for example json) that docker/test/generate_demo_sql.py needs.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3 libpython3-stdlib python3-ipykernel \
+    && apt-get install -y --no-install-recommends python3 libpython3-stdlib python3-ipykernel python3-venv \
     && rm -rf /var/lib/apt/lists/*
+
+# Debian bookworm has no jupyterlab package. Codespaces' "JupyterLab" option
+# needs `jupyter lab` on the PATH, so install it into its own venv.
+RUN python3 -m venv /opt/jupyter \
+    && /opt/jupyter/bin/pip install --no-cache-dir jupyterlab ipykernel \
+    && ln -s /opt/jupyter/bin/jupyter /usr/local/bin/jupyter \
+    && ln -s /opt/jupyter/bin/jupyter-lab /usr/local/bin/jupyter-lab
