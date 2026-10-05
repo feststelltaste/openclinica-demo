@@ -17,7 +17,9 @@
         "workbench.secondarySideBar.defaultVisibility": "hidden"
       },
       "extensions": [
-        "vscjava.vscode-java-pack"
+        "vscjava.vscode-java-pack",
+        "ms-python.python",
+        "ms-toolsai.jupyter"
       ]
     }
   },
