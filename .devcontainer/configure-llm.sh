@@ -3,11 +3,11 @@
 # Run once in the Codespace terminal:  bash .devcontainer/configure-llm.sh
 set -euo pipefail
 
-read -r -p "LLM base URL: " LLM_BASE_URL
-read -r -s -p "LLM API key (input hidden): " LLM_API_KEY
+read -r -p "LiteLLM URL: " LITELLM_URL
+read -r -s -p "LiteLLM API key (input hidden): " LITELLM_API_KEY
 echo
-read -r -p "Model id: " LLM_MODEL
+read -r -p "Model id: " LITELLM_MODEL
 
-export LLM_BASE_URL LLM_API_KEY LLM_MODEL PI_KEY_LITERAL=1
+export LITELLM_URL LITELLM_API_KEY LITELLM_MODEL PI_KEY_LITERAL=1
 bash "$(dirname "$0")/configure-pi.sh"
 echo "Start the agent with: pi"
