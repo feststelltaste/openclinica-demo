@@ -27,13 +27,48 @@ model = os.environ.get("LITELLM_MODEL") or MODELS[0][0]
 # (configure-llm.sh) is stored literally in the home directory.
 api_key = os.environ["LITELLM_API_KEY"] if os.environ.get("PI_KEY_LITERAL") else "$LITELLM_API_KEY"
 
+def limits():
+    """Context and output limits per model id from LiteLLM's /model/info.
+
+    Pi assumes 128000 / 16384 for models it does not know. LiteLLM only
+    reports a limit if one is set for the model, so anything missing there
+    keeps Pi's default.
+    """
+    import urllib.request
+    base = os.environ["LITELLM_URL"].rstrip("/")
+    key = os.environ.get("LITELLM_API_KEY", "")
+    for url in (base + "/model/info", base.removesuffix("/v1") + "/model/info"):
+        try:
+            req = urllib.request.Request(url, headers={"Authorization": "Bearer " + key})
+            data = json.load(urllib.request.urlopen(req, timeout=10))["data"]
+        except Exception:
+            continue
+        found = {m["model_name"]: m.get("model_info") or {} for m in data if "model_name" in m}
+        if found:
+            return found
+    return {}
+
+
+info = limits()
+
+
+def entry(model_id, name):
+    e = {"id": model_id, "name": name}
+    i = info.get(model_id, {})
+    if i.get("max_input_tokens"):
+        e["contextWindow"] = i["max_input_tokens"]
+    if i.get("max_output_tokens"):
+        e["maxTokens"] = i["max_output_tokens"]
+    return e
+
+
 models = {
     "providers": {
         "litellm": {
             "baseUrl": os.environ["LITELLM_URL"],
             "api": os.environ.get("LITELLM_API", "openai-completions"),
             "apiKey": api_key,
-            "models": [{"id": i, "name": n} for i, n in MODELS],
+            "models": [entry(i, n) for i, n in MODELS],
         }
     }
 }
