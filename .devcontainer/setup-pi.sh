@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs the Pi coding agent and, if LITELLM_URL / LITELLM_MODEL are set
+# Installs the Pi coding agent and, if LITELLM_URL is set
 # (Codespaces secrets), configures it via configure-pi.sh.
 set -euo pipefail
 

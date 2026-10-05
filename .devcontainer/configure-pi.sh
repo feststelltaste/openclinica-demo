@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Writes the Pi provider config from LITELLM_URL / LITELLM_API_KEY / LITELLM_MODEL.
+# LITELLM_MODEL is optional and selects the default model (first one below).
 # LITELLM_API is optional: openai-completions (default), openai-responses,
 # anthropic-messages or google-generative-ai.
 set -euo pipefail
 
-if [[ -z "${LITELLM_URL:-}" || -z "${LITELLM_MODEL:-}" ]]; then
-    echo "LITELLM_URL or LITELLM_MODEL not set; skipping Pi provider configuration."
+if [[ -z "${LITELLM_URL:-}" ]]; then
+    echo "LITELLM_URL not set; skipping Pi provider configuration."
     exit 0
 fi
 
@@ -16,7 +17,12 @@ python3 - "$pi_dir" <<'PY'
 import json, os, sys
 
 pi_dir = sys.argv[1]
-model = os.environ["LITELLM_MODEL"]
+MODELS = [
+    ("eu.glm-53-flash", "GLM 5.3 Flash"),
+    ("eu.qwen3.8-flash-next", "Qwen 3.8 Flash Next"),
+    ("eu.deepseek-v4.1-flash", "DeepSeek V4.1 Flash"),
+]
+model = os.environ.get("LITELLM_MODEL") or MODELS[0][0]
 # Secrets arrive as env vars, so only reference them; a key typed in by hand
 # (configure-llm.sh) is stored literally in the home directory.
 api_key = os.environ["LITELLM_API_KEY"] if os.environ.get("PI_KEY_LITERAL") else "$LITELLM_API_KEY"
@@ -27,7 +33,7 @@ models = {
             "baseUrl": os.environ["LITELLM_URL"],
             "api": os.environ.get("LITELLM_API", "openai-completions"),
             "apiKey": api_key,
-            "models": [{"id": model, "name": model}],
+            "models": [{"id": i, "name": n} for i, n in MODELS],
         }
     }
 }
@@ -38,4 +44,4 @@ settings.update({"defaultProvider": "litellm", "defaultModel": model})
 json.dump(models, open(os.path.join(pi_dir, "models.json"), "w"), indent=2)
 json.dump(settings, open(settings_path, "w"), indent=2)
 PY
-echo "Pi configured for $LITELLM_MODEL at $LITELLM_URL"
+echo "Pi configured for $LITELLM_URL (default: ${LITELLM_MODEL:-eu.glm-53-flash})"

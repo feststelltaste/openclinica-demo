@@ -34,9 +34,6 @@
     },
     "LITELLM_API_KEY": {
       "description": "API key for the LLM API used by the Pi coding agent"
-    },
-    "LITELLM_MODEL": {
-      "description": "Model id sent to the LLM API"
     }
   },
   "forwardPorts": [8080],
