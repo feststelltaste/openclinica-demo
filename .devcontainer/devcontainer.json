@@ -1,6 +1,9 @@
 {
   "name": "OpenClinica",
   "image": "ghcr.io/feststelltaste/openclinica-demo-devcontainer:latest",
+  "containerEnv": {
+    "NPM_CONFIG_UPDATE_NOTIFIER": "false"
+  },
   "customizations": {
     "vscode": {
       "settings": {
