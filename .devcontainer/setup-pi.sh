@@ -7,4 +7,11 @@ set -euo pipefail
 command -v pi >/dev/null || npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 pi install npm:pi-subagents
 
-bash "$(dirname "$0")/configure-pi.sh"
+# Offer to configure Pi in new terminals until it is configured or skipped.
+script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    grep -qF prompt-llm.sh "$rc" 2>/dev/null ||
+        echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
+done
+
+bash "$script_dir/configure-pi.sh"

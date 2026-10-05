@@ -91,7 +91,8 @@ and API key you were given:
 bash .devcontainer/configure-llm.sh
 ```
 
-Then start the agent with `pi`. The default model is `eu.deepseek-v4.1-flash`;
+The first terminal in a new codespace offers to do this for you; type `s` to
+skip it. Then start the agent with `pi`. The default model is `eu.deepseek-v4.1-flash`;
 `eu.glm-53-flash` and `eu.qwen3.8-flash-next` are available through `/model`.
 The key is stored only in `~/.pi/agent/models.json` inside the codespace.
 Maintainers can instead set the Codespaces secrets `LITELLM_URL` and
