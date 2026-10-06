@@ -1,18 +1,32 @@
 #!/usr/bin/env bash
-# Installs the Pi coding agent (and Claude Code if missing) and, if LITELLM_URL is set
-# (Codespaces secrets), configures it via configure-pi.sh.
-set -euo pipefail
+# Installs the Pi coding agent and Claude Code if the image does not have them
+# yet, adds the pi-subagents extension and, if LITELLM_URL is set (Codespaces
+# secrets), configures both via configure-pi.sh. Failures of single steps are
+# reported but do not stop the following ones.
+set -uo pipefail
 
-# Pi itself is part of the dev container image; install it only if missing.
-command -v pi >/dev/null || npm install -g --ignore-scripts @earendil-works/pi-coding-agent
-command -v claude >/dev/null || npm install -g @anthropic-ai/claude-code
-pi install npm:pi-subagents
-
-# Offer to configure Pi in new terminals until it is configured or skipped.
 script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+# Offer to configure the agents in new terminals until done or skipped.
 for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     grep -qF prompt-llm.sh "$rc" 2>/dev/null ||
         echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
 done
+
+# The global npm directory belongs to root in the image, so fall back to sudo.
+npm_global() {
+    npm install -g "$@" || sudo npm install -g "$@"
+}
+
+command -v pi >/dev/null ||
+    npm_global --ignore-scripts @earendil-works/pi-coding-agent ||
+    echo "Could not install Pi."
+command -v claude >/dev/null ||
+    npm_global @anthropic-ai/claude-code ||
+    echo "Could not install Claude Code."
+
+if command -v pi >/dev/null; then
+    pi install npm:pi-subagents || echo "Could not install pi-subagents."
+fi
 
 bash "$script_dir/configure-pi.sh"
