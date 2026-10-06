@@ -93,11 +93,14 @@ bash .devcontainer/configure-llm.sh
 ```
 
 The first terminal in a new codespace offers to do this for you; type `s` to
-skip it. Then start the agent with `pi` or `claude`. Claude Code uses the same LiteLLM
-connection through its Anthropic-compatible API: DeepSeek is the default
-(Sonnet), GLM is Opus and Qwen is Haiku in its `/model` menu. Pi: The default model is `eu.deepseek-v4.1-flash`;
-`eu.glm-53-flash` and `eu.qwen3.8-flash-next` are available through `/model`.
-The key is stored only in `~/.pi/agent/models.json` inside the codespace.
+skip it. Then start the agent with `pi` or `claude`.
+
+The default model is `eu.deepseek-v4.1-flash`; `eu.glm-53-flash` and
+`eu.qwen3.8-flash-next` are available through `/model` in Pi. Claude Code uses
+the same LiteLLM connection through its Anthropic-compatible API: DeepSeek is
+Sonnet (the default), GLM is Opus and Qwen is Haiku in its `/model` menu. The
+key is stored only in the home directory of the codespace
+(`~/.pi/agent/models.json`, `~/.claude/settings.json`).
 Maintainers can instead set the Codespaces secrets `LITELLM_URL` and
 `LITELLM_API_KEY` (optionally the environment variable `LITELLM_MODEL` for a
 different default model); they are picked up when the codespace is created.
