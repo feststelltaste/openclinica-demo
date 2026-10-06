@@ -1,7 +1,7 @@
 # Sourced from ~/.bashrc and ~/.zshrc (see setup-pi.sh), which sets
 # _oc_devcontainer_dir to this folder. In an interactive
 # terminal it offers to configure Pi for LiteLLM until that has been done or
-# skipped. Skip with "s"; run `bash .devcontainer/configure-llm.sh` any time.
+# skipped. Skip with "s"; run `bash .devcontainer/setup.sh` any time.
 case $- in *i*) ;; *) return 0 2>/dev/null ;; esac
 [ -t 0 ] && [ -t 1 ] || return 0
 
@@ -13,10 +13,10 @@ if [ ! -f "${_llm_dir}/agent/models.json" ] && [ ! -f "${_llm_dir}/llm-prompt-sk
     case "$_llm_answer" in
         s|S|skip)
             mkdir -p "$_llm_dir" && : > "${_llm_dir}/llm-prompt-skipped"
-            printf 'Skipped. Run: bash .devcontainer/configure-llm.sh\n\n'
+            printf 'Skipped. Run: bash .devcontainer/setup.sh\n\n'
             ;;
         *)
-            bash "${_oc_devcontainer_dir}/configure-llm.sh"
+            bash "${_oc_devcontainer_dir}/setup.sh"
             ;;
     esac
     unset _llm_answer

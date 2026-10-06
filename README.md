@@ -89,7 +89,7 @@ Pi talks to a LiteLLM instance. Run this once in the terminal and enter the URL
 and API key you were given:
 
 ```bash
-bash .devcontainer/configure-llm.sh
+bash .devcontainer/setup.sh
 ```
 
 The first terminal in a new codespace offers to do this for you; type `s` to

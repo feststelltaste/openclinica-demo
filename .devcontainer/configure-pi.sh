@@ -26,7 +26,7 @@ MODELS = [
 ]
 model = os.environ.get("LITELLM_MODEL") or MODELS[0][0]
 # Secrets arrive as env vars, so only reference them; a key typed in by hand
-# (configure-llm.sh) is stored literally in the home directory.
+# (setup.sh) is stored literally in the home directory.
 api_key = os.environ["LITELLM_API_KEY"] if os.environ.get("PI_KEY_LITERAL") else "$LITELLM_API_KEY"
 
 def limits():
