@@ -29,7 +29,7 @@
   "postStartCommand": [
     "bash",
     "-c",
-    "source docker/demo/base-url.sh && docker compose -f docker/docker-compose.demo.yml up -d && bash docker/demo/print-url.sh"
+    "for i in $(seq 1 60); do docker info >/dev/null 2>&1 && break; echo 'Waiting for Docker daemon...'; sleep 2; done; source docker/demo/base-url.sh && docker compose -f docker/docker-compose.demo.yml up -d && bash docker/demo/print-url.sh"
   ],
   "secrets": {
     "LITELLM_URL": {
