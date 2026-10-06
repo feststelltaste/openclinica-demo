@@ -1,3 +1,15 @@
+# Stage 1: build the project once so that all Maven dependencies and plugins
+# are downloaded. Only the resulting repository is kept in the final image.
+FROM mcr.microsoft.com/devcontainers/java:1-17-bookworm AS maven-repository
+ENV JAVA_HOME=/usr/lib/jvm/msopenjdk-current
+# Same Maven version as the Dev Container java feature installs (mavenVersion in
+# devcontainer.json), so that the cached plugin versions match.
+RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz \
+    | tar -xz -C /opt \
+    && ln -s /opt/apache-maven-3.9.9/bin/mvn /usr/local/bin/mvn
+COPY . /src
+RUN cd /src && mvn -B -q -DskipTests -Dmaven.repo.local=/m2repo package
+
 FROM mcr.microsoft.com/devcontainers/java:1-17-bookworm
 
 # The base image currently contains a Yarn APT source whose expired/missing
@@ -29,3 +41,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g --ignore-scripts @earendil-works/pi-coding-agent \
     && npm install -g @anthropic-ai/claude-code
+
+# Maven repository with all dependencies, so the first build works offline-fast.
+RUN mkdir -p /home/vscode/.m2 && chown vscode:vscode /home/vscode/.m2
+COPY --from=maven-repository --chown=vscode:vscode /m2repo /home/vscode/.m2/repository

@@ -1,12 +1,14 @@
 {
   "name": "OpenClinica development container image",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": "../.."
   },
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "none",
-      "installMaven": true
+      "installMaven": true,
+      "mavenVersion": "3.9.9"
     },
     "ghcr.io/devcontainers/features/docker-in-docker:4": {}
   }

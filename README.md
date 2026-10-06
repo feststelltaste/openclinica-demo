@@ -107,8 +107,10 @@ different default model); they are picked up when the codespace is created.
 
 The development container itself is a prebuilt image
 (`ghcr.io/feststelltaste/openclinica-demo-devcontainer:latest`, built from
-`docker/devcontainer/`). The workflow `Devcontainer-Image` rebuilds it whenever
-something in that folder changes on `master`; it can also be started manually.
+`docker/devcontainer/`). It already contains the Maven dependencies of the
+project, so the first `mvn package` needs no downloads. The workflow
+`Devcontainer-Image` rebuilds it whenever something in that folder or one of the
+`pom.xml` files changes on `master`; it can also be started manually.
 The package must be public. Settings, extensions and the start commands stay in
 `.devcontainer/devcontainer.json` and need no image rebuild.
 
