@@ -6,6 +6,10 @@ on:
       - master
     paths:
       - docker/devcontainer/**
+      - pom.xml
+      - core/pom.xml
+      - web/pom.xml
+      - ws/pom.xml
       - .github/workflows/devcontainer-image.yml
   workflow_dispatch:
 
