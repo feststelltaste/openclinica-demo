@@ -1,0 +1,139 @@
+# Example catalog for a PHP application (Laravel or Symfony). Copy it to
+# <out>/concepts.yaml and adapt it to the real project. The catalog is a draft, not a standard.
+# The domain concepts are placeholders: replace them with the terms of your own domain.
+# A file belongs to a concept if path OR content matches.
+#   path:    regexes on the repo path (a path match = the core of the concept)
+#   content: regexes on the file content, case-insensitive (a match = touched, heuristic)
+settings:
+  since_months: 24
+  exclude_paths:
+    - '(^|/)(vendor|node_modules|storage|bootstrap/cache|var/cache|public/build)/'
+    - '(^|/)public/(vendor|js|css)/'
+
+lenses:
+  technical-crosscutting:
+    title: Technical cross-cutting concepts
+    concepts:
+      auth-permissions:
+        title: Authentication, authorization, policies
+        path: ['Auth', 'Policies', 'Guard', 'Security', 'Middleware/.*Auth', 'Voter']
+        content: ['Auth::|Gate::|->authorize\(|@can\(|isGranted', 'password_hash|Hash::make|bcrypt', 'Sanctum|Passport|Fortify|JWT']
+      audit-history:
+        title: Audit and change history
+        path: ['Audit', 'History', 'Revision']
+        content: ['auditable|owen-it|activitylog|Loggable|created_by|updated_by']
+      transactions-orm:
+        title: Transactions and ORM mechanics
+        path: ['Repositor', 'Database/', 'Doctrine']
+        content: ['DB::transaction|beginTransaction|->commit\(\)|->rollBack\(\)', 'EntityManager|->flush\(\)|->persist\(', 'lockForUpdate']
+      raw-sql:
+        title: Hand-written SQL
+        path: ['\.sql$', 'Queries']
+        content: ['DB::(raw|select|statement|unprepared)|->query\(|whereRaw|selectRaw', 'select\s.+\sfrom\s', 'insert\s+into\s']
+      i18n:
+        title: Internationalization
+        path: ['lang/', 'translations?/', 'locale']
+        content: ['__\(|trans\(|@lang|->trans\(|Translator', 'App::setLocale']
+      logging-observability:
+        title: Logging and monitoring
+        path: ['Logging', 'Monitor', 'Sentry']
+        content: ['Log::|LoggerInterface|->(info|warning|error)\(', 'Sentry|Telescope|Prometheus']
+      validation-errors:
+        title: Validation and error handling
+        path: ['Requests/', 'Validation', 'Exceptions?/', 'Handler\.php']
+        content: ['FormRequest|->validate\(|Validator::make|Assert\\', 'throw new \w*Exception']
+      background-jobs:
+        title: Queues, jobs, scheduler
+        path: ['Jobs/', 'Console/', 'Commands?/', 'Schedule', 'Queue', 'Messenger']
+        content: ['ShouldQueue|dispatch\(|Bus::|MessageHandler|schedule->', 'Horizon|supervisor']
+      configuration:
+        title: Configuration and environment
+        path: ['(^|/)config/', '\.env', 'services\.yaml', 'packages/']
+        content: ['env\(["'']|config\(["'']|getenv|\$_ENV|parameters\.']
+      caching-session:
+        title: Caches and session state
+        path: ['Cache', 'Session']
+        content: ['Cache::|->remember\(|Redis::|session\(|\$_SESSION']
+      datetime-handling:
+        title: Date, time, time zones
+        path: []
+        content: ['Carbon|DateTimeImmutable|DateTimeZone|date_default_timezone|strtotime']
+
+  domain-crosscutting:
+    title: Domain cross-cutting concepts
+    concepts:
+      # Add the terms of your own domain here (examples; please replace):
+      tenancy-roles:
+        title: Tenants and roles
+        path: ['Tenant', 'Organi[sz]ation', 'Role']
+        content: ['tenant_id|currentTenant|organi[sz]ation_id', 'hasRole|->role\b']
+      personal-data:
+        title: Personal data and privacy
+        path: ['Gdpr', 'Privacy', 'Pii', 'Customer', 'Person']
+        content: ['email|phone|birth|address|iban', 'anonymi[sz]e|gdpr|forget']
+      money-billing:
+        title: Prices, billing, payments
+        path: ['Billing', 'Payment', 'Invoice', 'Pricing', 'Checkout']
+        content: ['Money|currency|bcadd|stripe|paypal|Cashier']
+      state-lifecycle:
+        title: Status and lifecycle of core objects
+        path: ['State', 'Status', 'Workflow']
+        content: ['Status::|->status\s*=|StateMachine|Workflow\\']
+      external-integrations:
+        title: External integrations and contracts
+        path: ['Integration', 'Clients?/', 'Webhook', 'Adapters?/']
+        content: ['Http::(get|post)|GuzzleHttp|curl_init|Webhook', 'Soap|Kafka|S3Client']
+
+  technical-structure:
+    title: Technical structures
+    concepts:
+      layer-models:
+        title: Models / entities
+        path: ['Models?/', 'Entity/', 'Entities/']
+        content: ['extends Model|#\[ORM\\Entity|@ORM\\Entity']
+      layer-controllers-api:
+        title: Controllers and API endpoints
+        path: ['Controllers?/', 'Http/', 'routes/', 'Api/']
+        content: ['Route::|#\[Route|@Route']
+      layer-services:
+        title: Services and business logic
+        path: ['Services?/', 'Domain/', 'UseCases?/', 'Actions?/']
+        content: []
+      layer-views:
+        title: Views and templates (Blade/Twig)
+        path: ['resources/views', 'templates/', '\.blade\.php$', '\.twig$', '\.phtml$']
+        content: []
+      db-migrations:
+        title: Database migrations and seeds
+        path: ['migrations?/', 'database/', 'seeders?']
+        content: []
+      wiring-providers:
+        title: Wiring (service providers, container, bootstrap)
+        path: ['Providers?/', 'bootstrap/', 'Kernel\.php', 'services\.yaml', 'index\.php']
+        content: []
+      testing:
+        title: Tests and test infrastructure
+        path: ['(^|/)tests?/', 'Test\.php$', 'phpunit']
+        include_tests: true
+        content: []
+
+  domain-structure:
+    title: Domain structures
+    concepts:
+      # One entry per module or namespace. Examples, please replace with real areas:
+      area-accounts:
+        title: Accounts and user management
+        path: ['Accounts?/', 'Users?/']
+        content: []
+      area-orders:
+        title: Orders / core process
+        path: ['Orders?/', 'Cart/', 'Checkout/']
+        content: []
+      area-reporting:
+        title: Reporting and export
+        path: ['Reports?/', 'Export', 'Analytics']
+        content: []
+      area-admin:
+        title: Administration and back office
+        path: ['Admin', 'Backoffice', 'Nova', 'Filament']
+        content: []

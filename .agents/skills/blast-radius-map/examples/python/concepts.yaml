@@ -1,0 +1,140 @@
+# Example catalog for a Python web application (Django or Flask). Copy it to
+# <out>/concepts.yaml and adapt it to the real project. The catalog is a draft, not a standard.
+# The domain concepts are placeholders: replace them with the terms of your own domain.
+# A file belongs to a concept if path OR content matches.
+#   path:    regexes on the repo path (a path match = the core of the concept)
+#   content: regexes on the file content, case-insensitive (a match = touched, heuristic)
+settings:
+  since_months: 24
+  exclude_paths:
+    - '(^|/)(venv|\.venv|node_modules|__pycache__|site-packages|build|dist|\.tox)/'
+    - '/migrations/__init__\.py$'
+    - '(^|/)static/(vendor|lib)/'
+
+lenses:
+  technical-crosscutting:
+    title: Technical cross-cutting concepts
+    concepts:
+      auth-permissions:
+        title: Authentication, authorization, permissions
+        path: ['auth', 'permission', 'security', 'login', 'oauth', 'jwt']
+        content: ['@login_required|@permission_required|PermissionDenied', 'check_password|make_password|hashlib\.', 'flask_login|django\.contrib\.auth|authlib|jwt\.']
+      audit-history:
+        title: Audit and change history
+        path: ['audit', 'history', 'simple_history']
+        content: ['simple_history|reversion|auditlog', 'created_by|modified_by|updated_by']
+      transactions-orm:
+        title: Transactions and ORM mechanics
+        path: ['/db/', 'database', 'orm', 'session']
+        content: ['transaction\.atomic|select_for_update', 'session\.(commit|rollback|flush)', 'sessionmaker|create_engine']
+      raw-sql:
+        title: Hand-written SQL
+        path: ['\.sql$', 'queries']
+        content: ['cursor\.execute|\.raw\(|text\(["'']', 'select\s.+\sfrom\s', 'insert\s+into\s']
+      i18n:
+        title: Internationalization
+        path: ['locale', 'i18n', '\.po$']
+        content: ['gettext|ugettext|_\(["'']', 'LocaleMiddleware|babel']
+      logging-observability:
+        title: Logging and monitoring
+        path: ['logging', 'monitor', 'metrics', 'sentry']
+        content: ['logging\.getLogger|structlog', 'sentry_sdk|prometheus_client|statsd']
+      validation-errors:
+        title: Validation and error handling
+        path: ['validator', 'exceptions?\.py', 'forms?\.py', 'serializers?\.py']
+        content: ['ValidationError', 'pydantic|marshmallow|serializers\.', 'except\s+Exception']
+      background-jobs:
+        title: Background jobs and scheduling
+        path: ['tasks?\.py', 'celery', 'jobs?/', 'scheduler', 'cron']
+        content: ['@shared_task|@app\.task|celery|rq\.|apscheduler', '@periodic_task']
+      configuration:
+        title: Configuration and environment
+        path: ['settings', 'config', '\.env', 'conf/']
+        content: ['os\.environ|getenv|django\.conf|settings\.[A-Z_]+', 'pydantic_settings|dotenv']
+      caching-state:
+        title: Caches and session state
+        path: ['cache', 'session']
+        content: ['cache\.(get|set)|@cache_page|lru_cache|redis', 'request\.session|flask\.session']
+      datetime-handling:
+        title: Date, time, time zones
+        path: []
+        content: ['datetime\.(now|utcnow)|timezone\.|pytz|zoneinfo|strftime|strptime']
+
+  domain-crosscutting:
+    title: Domain cross-cutting concepts
+    concepts:
+      # Add the terms of your own domain here (examples; please replace):
+      tenancy-roles:
+        title: Tenants and roles
+        path: ['tenant', 'organi[sz]ation', 'roles?']
+        content: ['tenant_id|request\.tenant|organi[sz]ation_id', 'role\s*==|has_role']
+      personal-data:
+        title: Personal data and privacy
+        path: ['gdpr', 'privacy', 'pii', 'person', 'customer']
+        content: ['email|phone|birth|address|iban|ssn', 'anonymi[sz]e|gdpr']
+      money-billing:
+        title: Prices, billing, payments
+        path: ['billing', 'payment', 'invoice', 'pricing', 'checkout']
+        content: ['Decimal\(|currency|stripe|paypal|invoice']
+      state-lifecycle:
+        title: Status and lifecycle of core objects
+        path: ['state', 'status', 'workflow']
+        content: ['Status\.|status\s*=\s*["'']|transition\(|django_fsm']
+      external-integrations:
+        title: External integrations and contracts
+        path: ['integration', 'clients?/', 'webhook', 'adapters?/']
+        content: ['requests\.(get|post|put)|httpx\.|urllib3|webhook', 'boto3|grpc|kafka|pika']
+
+  technical-structure:
+    title: Technical structures
+    concepts:
+      layer-models:
+        title: Models / entities
+        path: ['models?\.py', '/models/', 'entities']
+        content: ['models\.Model|db\.Model|declarative_base|SQLModel']
+      layer-views-api:
+        title: Views, controllers, API endpoints
+        path: ['views?\.py', '/views/', 'routes?', 'api/', 'endpoints?', 'urls\.py']
+        content: ['@app\.route|@router\.|APIView|ViewSet|@api_view']
+      layer-services:
+        title: Services and business logic
+        path: ['services?/', 'usecases?', 'domain/', 'logic']
+        content: []
+      layer-templates:
+        title: Templates and frontend files
+        path: ['templates?/', '\.html$', 'static/']
+        content: []
+      db-migrations:
+        title: Database migrations
+        path: ['migrations?/', 'alembic']
+        content: []
+      wiring-entrypoints:
+        title: Wiring and entry points (urls, wsgi/asgi, apps, CLI)
+        path: ['wsgi', 'asgi', 'apps\.py', 'urls\.py', 'manage\.py', 'cli', '__main__']
+        content: []
+      testing:
+        title: Tests and test infrastructure
+        path: ['(^|/)tests?/', 'test_', 'conftest', 'fixtures?']
+        include_tests: true
+        content: []
+
+  domain-structure:
+    title: Domain structures
+    concepts:
+      # One entry per Django app or domain package. Examples, please replace with real areas:
+      area-accounts:
+        title: Accounts and user management
+        path: ['accounts?/', 'users?/']
+        content: []
+      area-orders:
+        title: Orders / core process
+        path: ['orders?/', 'cart/', 'checkout/']
+        content: []
+      area-reporting:
+        title: Reporting and export
+        path: ['reports?/', 'export', 'analytics']
+        content: []
+      area-admin:
+        title: Administration and back office
+        path: ['admin', 'backoffice', 'staff']
+        content: []

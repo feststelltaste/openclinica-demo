@@ -1,0 +1,210 @@
+# Catalog of concepts (zone candidates), cutting across the packages.
+# Example catalog: copy it to <out>/concepts.yaml and adapt it to the real project.
+# The domain concepts are placeholders for your own domain terms.
+# A file belongs to a concept if path OR content matches.
+#   path:    regexes on the repo path (a path match = the core of the concept)
+#   content: regexes on the file content, case-insensitive (a match = touched, heuristic)
+# The "core vs. touched" reading appears later in the signals (core_files / touching_files).
+settings:
+  since_months: 24
+  extensions: [java, jsp, tag, xml, sql, properties, js, groovy]
+  exclude_paths:
+    - '(^|/)target/'
+    - 'webapp/js/'            # bundled JS libraries
+    - 'webapp/includes/(jmesa|jquery|ui)'   # Vendor
+    - 'gwt/'                  # generated GWT output
+    - '(^|/)docker/'
+    - '^temp/'
+    - 'pom\.xml$'
+
+lenses:
+
+  technical-crosscutting:
+    title: Technical cross-cutting concepts
+    concepts:
+      security-authn-authz:
+        title: Authentication, authorization, roles
+        path: ['security', 'login', 'Role', 'Password', 'SecurityManager', 'securityPolicy']
+        content: ['spring\.?security', 'AuthenticationProvider', 'SecurityManager', 'passwordHash|MD5|SHA-?\d+', 'hasRole|isUserInRole|Role\.', 'ldap']
+      audit-trail-technical:
+        title: Audit trail (technical mechanics, DB triggers, AuditDAO)
+        path: ['[Aa]udit']
+        content: ['audit_log|audit_event|AuditEvent|AuditDAO|AuditableEntity|EntityAudit']
+      e-signature-part11:
+        title: Electronic Signature / 21 CFR Part 11
+        path: ['[Ss]ignature']
+        content: ['electronic.?signature|part ?11|21 ?CFR|SignatureBean|e-?sign']
+      transactions-persistence:
+        title: Transactions and persistence mechanics (JDBC/Hibernate/sessions)
+        path: ['dao/core', 'dao/hibernate', 'AbstractDao', 'SessionFactory', 'DataSource']
+        content: ['@Transactional', 'SessionFactory|getCurrentSession|HibernateTemplate', 'setAutoCommit|\.commit\(\)|\.rollback\(\)', 'DataSource']
+      sql-queries:
+        title: Hand-written SQL (query XML, Oracle/Postgres variants)
+        path: ['resources/queries/', '\.sql$']
+        content: ['select\s.+\sfrom\s', 'insert\s+into\s', 'update\s+\w+\s+set\s']
+      i18n:
+        title: Internationalization / resource bundles
+        path: ['i18n', 'words?\.properties', 'terms?\.properties', 'resword|resterm|Locale']
+        content: ['ResourceBundle', 'resword|resterm|resformat', 'LocaleResolver|Locale\.']
+      logging-monitoring:
+        title: Logging and monitoring
+        path: ['/log/', 'logback']
+        content: ['LoggerFactory|Logger\.getLogger', 'log\.(debug|info|warn|error)']
+      validation-error-handling:
+        title: Validation and error handling
+        path: ['validator', 'exception']
+        content: ['Validator|Errors\b|BindingResult', 'throw new \w*Exception']
+      scheduling-jobs:
+        title: Background jobs / scheduling (Quartz)
+        path: ['/job/', 'Job\.java', 'quartz', 'Scheduler']
+        content: ['org\.quartz', 'StdScheduler|SchedulerFactoryBean|JobDetail']
+      mail-notification:
+        title: Email and notification
+        path: ['[Mm]ail']
+        content: ['JavaMail|MimeMessage|JavaMailSender|sendEmail']
+      configuration-properties:
+        title: Configuration (properties, CoreResources, environment dependencies)
+        path: ['CoreResources', 'datainfo', 'enterprise', 'extract\.properties', 'applicationContext']
+        content: ['CoreResources', 'getString\("', 'System\.getProperty|System\.getenv']
+      caching-session-state:
+        title: Caches and session state
+        path: ['cache', 'Session']
+        content: ['Ehcache|CacheManager|@Cacheable', 'HttpSession|getSession\(\)', 'ThreadLocal']
+      datetime-handling:
+        title: Date/time/time zones
+        path: []
+        content: ['SimpleDateFormat', 'java\.util\.Date', 'Calendar\.getInstance', 'TimeZone']
+
+  domain-crosscutting:
+    title: Domain cross-cutting concepts
+    concepts:
+      audit-trail-domain:
+        title: Traceability of data changes (domain logic, reason for change)
+        path: ['reasonForChange', 'ReasonFor']
+        content: ['reason.?for.?change|RFC\b', 'old_value|oldValue', 'audit.?log']
+      status-lifecycle:
+        title: Status and lifecycle (available, removed, locked, frozen, signed)
+        path: ['/Status', 'SubjectEventStatus', 'DataEntryStage']
+        content: ['Status\.(AVAILABLE|DELETED|AUTO_DELETED|LOCKED|PENDING|UNAVAILABLE)', 'SubjectEventStatus', 'DataEntryStage', 'isRemoved|isDeleted|isLocked']
+      study-site-hierarchy:
+        title: Study/site hierarchy and study parameter configuration
+        path: ['StudyParameter', 'StudyConfig', 'SiteBean', 'StudyBean']
+        content: ['StudyParameterConfig|StudyParameterValue', 'getParentStudyId|isSite\(\)', 'currentStudy']
+      user-study-roles:
+        title: Roles per study/site (investigator, monitor, data manager, ...)
+        path: ['StudyUserRole', 'Role\.java']
+        content: ['StudyUserRoleBean', 'Role\.(INVESTIGATOR|MONITOR|COORDINATOR|STUDYDIRECTOR|RESEARCHASSISTANT)', 'isInvestigator|isMonitor|isDirector']
+      subject-identity-privacy:
+        title: Subject identity and personal data (PID, DOB, gender)
+        path: ['SubjectBean', 'Subject\.java', 'subject/']
+        content: ['uniqueIdentifier|getDateOfBirth|dob\b', 'personId|secondaryLabel', 'collectDob|genderRequired']
+      discrepancy-notes:
+        title: Discrepancy Notes / Queries
+        path: ['[Dd]iscrepancy', 'DiscrepancyNote']
+        content: ['DiscrepancyNote', 'queryResolution|ResolutionStatus']
+      sdv:
+        title: Source Data Verification
+        path: ['[Ss]dv', 'SDV']
+        content: ['sourceDataVerification|SDV\b|setSdvStatus']
+      rules-engine:
+        title: Rules engine (data validation rules, actions, expressions)
+        path: ['/rule/', 'RuleSet', 'Rule']
+        content: ['RuleSetBean|RuleBean|RuleActionBean', 'ExpressionBean|OpenClinicaExpression', 'RuleRunner']
+      odm-cdisc:
+        title: ODM/CDISC data exchange (export, import, metadata)
+        path: ['[Oo]dm', 'cdisc', 'crfdata']
+        content: ['ODM|CDISC|odm1\d', 'OdmExtract|FullReportBean']
+      randomization-ext-integration:
+        title: External integrations (OpenRosa/Participate/randomization/REST clients)
+        path: ['openrosa', 'pform', 'participate', 'randomi[sz]ation']
+        content: ['openrosa|PFormCache|Enketo', 'RestTemplate|HttpClient', 'randomi[sz]ation']
+
+  technical-structure:
+    title: Technical structures
+    concepts:
+      layer-dao:
+        title: DAO layer (JDBC + Hibernate DAOs)
+        path: ['/dao/']
+        content: []
+      layer-beans:
+        title: Beans / data transfer (legacy beans)
+        path: ['/bean/']
+        content: []
+      layer-domain-entities:
+        title: JPA/Hibernate-Entities
+        path: ['/domain/']
+        content: ['@Entity']
+      layer-service:
+        title: Service layer
+        path: ['/service/']
+        content: []
+      layer-servlets-control:
+        title: Servlet/SecureController layer (control)
+        path: ['/control/']
+        content: []
+      layer-spring-mvc:
+        title: Spring MVC controllers and REST
+        path: ['/controller/', '/restful/', 'ws/src/main/java']
+        content: ['@Controller|@RestController|@RequestMapping']
+      layer-view-jsp:
+        title: JSP/Tag-Views
+        path: ['\.jsp$', '\.tag$', '/view/', 'webapp/WEB-INF/tags']
+        content: []
+      layer-ws:
+        title: Web service module (SOAP/REST, ws)
+        path: ['^ws/']
+        content: []
+      db-schema-migration:
+        title: DB schema and Liquibase migrations
+        path: ['resources/migration/']
+        include_tests: true
+        content: []
+      wiring-spring-config:
+        title: Spring/servlet configuration (XML wiring)
+        path: ['applicationContext.*\.xml', 'servlet.*\.xml', 'web\.xml', 'security-config\.xml']
+        content: []
+      testing-infrastructure:
+        title: Tests and test infrastructure
+        path: ['src/test/']
+        include_tests: true
+        content: []
+
+  domain-structure:
+    title: Domain structures (bounded contexts / functional areas)
+    concepts:
+      area-study-setup:
+        title: Study setup and management (events, CRF assignment, sites)
+        path: ['managestudy', 'service/managestudy', 'dao/managestudy']
+        content: []
+      area-data-entry:
+        title: Data entry (initial/double data entry, forms, items)
+        path: ['/submit/', 'DataEntry', 'dao/submit', 'view/form', 'view/display']
+        content: []
+      area-crf-metadata:
+        title: CRF/item metadata, versioning, upload
+        path: ['[Cc]rf', 'ItemBean', 'ItemMetadata', 'SectionBean']
+        content: []
+      area-extract:
+        title: Data extraction and datasets
+        path: ['/extract/', 'Dataset', 'ArchivedDataset']
+        content: []
+      area-admin:
+        title: Administration (users, audit view, system, techadmin)
+        path: ['/admin/', 'techadmin', 'service/user', 'dao/admin']
+        content: []
+      area-login-account:
+        title: Login, account, password reset
+        path: ['/login/', 'dao/login', 'UserAccount']
+        content: []
+      area-rules:
+        title: Rule Designer / Rule Runner (functional area)
+        path: ['/rule/', 'service/rule', 'dao/rule']
+        content: []
+      area-mobile-forms:
+        title: Forms for participants/mobile (OpenRosa, PForm, Participate)
+        path: ['openrosa', 'pform', 'participate']
+        content: []
+      area-import-ws:
+        title: Data import and subject creation via web service
+        path: ['crfdata', 'createSubject', 'ws/']
+        content: []
