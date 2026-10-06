@@ -21,4 +21,4 @@ while true; do
     read -r -p "Enter the values again? [Y/n] " again
     [[ "$again" =~ ^[nN] ]] && break
 done
-echo "Start the agent with: pi"
+echo "Start an agent with: pi  or  claude"
