@@ -8,7 +8,7 @@ RUN rm -f /etc/apt/sources.list.d/yarn.list
 # python3-ipykernel provides the kernel for Jupyter notebooks. ripgrep and
 # fd-find are used by the Pi coding agent (Debian names the binary fdfind).
 # The base image ships only a minimal Python without the standard library
-# modules (for example json) that docker/test/generate_demo_sql.py needs.
+# modules (for example json) that docker/demo/generate_demo_sql.py needs.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends python3 libpython3-stdlib python3-ipykernel python3-venv \
         ripgrep fd-find \

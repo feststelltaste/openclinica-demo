@@ -4,7 +4,7 @@
         {
             "label": "Terminal",
             "type": "shell",
-            "command": "bash docker/test/print-url.sh; exec bash -i",
+            "command": "bash docker/demo/print-url.sh; exec bash -i",
             "presentation": {
                 "reveal": "always",
                 "focus": true,

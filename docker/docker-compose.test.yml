@@ -36,7 +36,7 @@ services:
       start_period: 60s
     volumes:
       - ../web/target/OpenClinica-web-3.18-SNAPSHOT.war:/usr/local/tomcat/webapps/OpenClinica.war:ro
-      - ./test/datainfo.properties:/usr/local/tomcat/openclinica.config/datainfo.properties:ro
+      - ./demo/datainfo.properties:/usr/local/tomcat/openclinica.config/datainfo.properties:ro
       - openclinica-test-files:/usr/local/tomcat/openclinica.data
 
 volumes:

@@ -31,7 +31,7 @@ with Docker Compose is required.
 Start OpenClinica and load the synthetic demo data from the repository root:
 
 ```bash
-COMPOSE_FILE=docker/docker-compose.demo.yml bash docker/test/reset-demo-data.sh --yes
+COMPOSE_FILE=docker/docker-compose.demo.yml bash docker/demo/reset-demo-data.sh --yes
 ```
 
 The command pulls the image, starts PostgreSQL and OpenClinica, waits until the
@@ -66,7 +66,7 @@ docker compose -f docker/docker-compose.test.yml up -d
 The first start creates and migrates the database and can take a few minutes.
 Follow it with `docker compose -f docker/docker-compose.test.yml logs -f openclinica`.
 To reset the database and load the demo data, run
-`bash docker/test/reset-demo-data.sh --yes`. Without `COMPOSE_FILE`, the script
+`bash docker/demo/reset-demo-data.sh --yes`. Without `COMPOSE_FILE`, the script
 uses `docker/docker-compose.test.yml`.
 
 ## GitHub Codespaces
@@ -129,7 +129,7 @@ state:
 The workflow publishes two images for the tag: `openclinica-demo` contains the
 application, `openclinica-demo-db` is PostgreSQL with the migrated database and
 the demo data. The data is generated reproducibly by
-`docker/test/reset-demo-data.sh` and dumped by `docker/test/dump-demo-data.sh`;
+`docker/demo/reset-demo-data.sh` and dumped by `docker/demo/dump-demo-data.sh`;
 the database image restores it on the first start with an empty volume. Both
 packages must be public so that codespaces and other computers can pull them
 without logging in. Set the tag in `docker/docker-compose.demo.yml` for both images.
