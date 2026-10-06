@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo_dir="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
-compose_file="${COMPOSE_FILE:-$repo_dir/docker-compose.test.yml}"
+compose_file="${COMPOSE_FILE:-$repo_dir/docker/docker-compose.test.yml}"
 generator="$repo_dir/docker/test/generate_demo_sql.py"
 
 if [[ "${1:-}" != "--yes" ]]; then

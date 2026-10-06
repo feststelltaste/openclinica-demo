@@ -1,3 +1,5 @@
+name: openclinica-demo
+
 services:
   database:
     image: ${OC_DB_IMAGE:-ghcr.io/feststelltaste/openclinica-demo-db:demo-v4}
@@ -42,8 +44,8 @@ services:
       start_period: 60s
     volumes:
       - openclinica-test-files:/usr/local/tomcat/openclinica.data
-      - ./docker/demo-root:/usr/local/tomcat/webapps/ROOT:ro
-      - ./docker/demo-context/OpenClinica.xml:/usr/local/tomcat/conf/Catalina/localhost/OpenClinica.xml:ro
+      - ./demo-root:/usr/local/tomcat/webapps/ROOT:ro
+      - ./demo-context/OpenClinica.xml:/usr/local/tomcat/conf/Catalina/localhost/OpenClinica.xml:ro
 
 volumes:
   openclinica-test-db:

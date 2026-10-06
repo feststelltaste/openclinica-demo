@@ -31,7 +31,7 @@ with Docker Compose is required.
 Start OpenClinica and load the synthetic demo data from the repository root:
 
 ```bash
-COMPOSE_FILE=docker-compose.demo.yml bash docker/test/reset-demo-data.sh --yes
+COMPOSE_FILE=docker/docker-compose.demo.yml bash docker/test/reset-demo-data.sh --yes
 ```
 
 The command pulls the image, starts PostgreSQL and OpenClinica, waits until the
@@ -48,7 +48,7 @@ and recreates the data.
 Stop the containers while retaining the data:
 
 ```bash
-docker compose -f docker-compose.demo.yml down
+docker compose -f docker/docker-compose.demo.yml down
 ```
 
 Add `--volumes` to remove the database and uploaded files as well.
@@ -60,14 +60,14 @@ Maven, JDK 17 for the build, Docker, and Docker Compose.
 
 ```bash
 mvn -DskipTests package
-docker compose -f docker-compose.test.yml up -d
+docker compose -f docker/docker-compose.test.yml up -d
 ```
 
 The first start creates and migrates the database and can take a few minutes.
-Follow it with `docker compose -f docker-compose.test.yml logs -f openclinica`.
+Follow it with `docker compose -f docker/docker-compose.test.yml logs -f openclinica`.
 To reset the database and load the demo data, run
 `bash docker/test/reset-demo-data.sh --yes`. Without `COMPOSE_FILE`, the script
-uses `docker-compose.test.yml`.
+uses `docker/docker-compose.test.yml`.
 
 ## GitHub Codespaces
 
@@ -124,7 +124,7 @@ state:
 3. The GitHub Actions workflow `Demo-Image` builds the WAR and publishes
    `ghcr.io/feststelltaste/openclinica-demo:demo-v4` and
    `ghcr.io/feststelltaste/openclinica-demo-db:demo-v4`. Wait until it is green.
-4. Set the image tags in `docker-compose.demo.yml` to the new version and commit.
+4. Set the image tags in `docker/docker-compose.demo.yml` to the new version and commit.
 
 The workflow publishes two images for the tag: `openclinica-demo` contains the
 application, `openclinica-demo-db` is PostgreSQL with the migrated database and
@@ -132,7 +132,7 @@ the demo data. The data is generated reproducibly by
 `docker/test/reset-demo-data.sh` and dumped by `docker/test/dump-demo-data.sh`;
 the database image restores it on the first start with an empty volume. Both
 packages must be public so that codespaces and other computers can pull them
-without logging in. Set the tag in `docker-compose.demo.yml` for both images.
+without logging in. Set the tag in `docker/docker-compose.demo.yml` for both images.
 
 ## Request a feature
 

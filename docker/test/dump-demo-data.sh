@@ -4,7 +4,7 @@
 set -euo pipefail
 
 repo_dir="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
-compose_file="${COMPOSE_FILE:-$repo_dir/docker-compose.test.yml}"
+compose_file="${COMPOSE_FILE:-$repo_dir/docker/docker-compose.test.yml}"
 output="${1:?usage: $0 <output.sql.gz>}"
 compose=(docker compose -f "$compose_file")
 

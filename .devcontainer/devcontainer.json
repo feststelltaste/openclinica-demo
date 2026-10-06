@@ -28,7 +28,7 @@
   "postStartCommand": [
     "bash",
     "-c",
-    "source docker/test/base-url.sh && docker compose -f docker-compose.demo.yml up -d && bash docker/test/print-url.sh"
+    "source docker/test/base-url.sh && docker compose -f docker/docker-compose.demo.yml up -d && bash docker/test/print-url.sh"
   ],
   "secrets": {
     "LITELLM_URL": {
