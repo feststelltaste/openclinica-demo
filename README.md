@@ -82,7 +82,8 @@ default; do not make this installation public because it uses known credentials.
 ### Coding agent and notebooks
 
 The container includes the [Pi](https://pi.dev) coding agent with the
-`pi-subagents` extension, and JupyterLab with a Python kernel for notebooks.
+`pi-subagents` extension, [Claude Code](https://claude.com/claude-code), and
+JupyterLab with a Python kernel for notebooks.
 
 Pi talks to a LiteLLM instance. Run this once in the terminal and enter the URL
 and API key you were given:
@@ -92,7 +93,9 @@ bash .devcontainer/configure-llm.sh
 ```
 
 The first terminal in a new codespace offers to do this for you; type `s` to
-skip it. Then start the agent with `pi`. The default model is `eu.deepseek-v4.1-flash`;
+skip it. Then start the agent with `pi` or `claude`. Claude Code uses the same LiteLLM
+connection through its Anthropic-compatible API: DeepSeek is the default
+(Sonnet), GLM is Opus and Qwen is Haiku in its `/model` menu. Pi: The default model is `eu.deepseek-v4.1-flash`;
 `eu.glm-53-flash` and `eu.qwen3.8-flash-next` are available through `/model`.
 The key is stored only in `~/.pi/agent/models.json` inside the codespace.
 Maintainers can instead set the Codespaces secrets `LITELLM_URL` and
