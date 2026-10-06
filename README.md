@@ -95,10 +95,13 @@ and API key you were given:
 The first terminal in a new codespace offers to do this for you; type `s` to
 skip it. Then start the agent with `pi` or `claude`.
 
-The default model is `eu.deepseek-v4.1-flash`; `eu.glm-53-flash` and
+The default model is `eu.glm-53-flash`; `eu.deepseek-v4.1-flash` and
 `eu.qwen3.8-flash-next` are available through `/model` in Pi. Claude Code uses
-the same LiteLLM connection through its Anthropic-compatible API: DeepSeek is
-Sonnet (the default), GLM is Opus and Qwen is Haiku in its `/model` menu. The
+the same LiteLLM connection through its Anthropic-compatible API: GLM Flash is
+Sonnet (the default), DeepSeek Pro is Opus and Qwen is Haiku in its `/model`
+menu. In the container `claude` is an alias for
+`claude --dangerously-skip-permissions`, so it never asks before running
+commands or editing files; use `command claude` for the normal behavior. The
 key is stored only in the home directory of the codespace
 (`~/.pi/agent/models.json`, `~/.claude/settings.json`).
 Maintainers can instead set the Codespaces secrets `LITELLM_URL` and

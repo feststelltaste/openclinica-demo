@@ -13,6 +13,13 @@ for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
         echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
 done
 
+# Claude Code always starts without permission prompts. Only meant for this
+# throwaway container; the alias is not set up anywhere else.
+for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    grep -qF "alias claude=" "$rc" 2>/dev/null ||
+        echo "alias claude='claude --dangerously-skip-permissions'" >> "$rc"
+done
+
 # The global npm directory belongs to root in the image, so fall back to sudo.
 npm_global() {
     npm install -g "$@" || sudo npm install -g "$@"
