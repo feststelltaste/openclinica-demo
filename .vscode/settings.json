@@ -1,3 +1,12 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "chat.disableAIFeatures": true,
+    "chat.commandCenter.enabled": false,
+    "chat.agent.enabled": false,
+    "github.copilot.enable": {
+        "*": false
+    },
+    "inlineChat.accessibleDiffView": "off",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.startupEditor": "none"
 }
