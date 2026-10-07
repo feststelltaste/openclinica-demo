@@ -44,9 +44,6 @@ env.update({
     "DISABLE_TELEMETRY": "1",
     "DISABLE_ERROR_REPORTING": "1",
 })
-# The `claude` alias (setup-pi.sh) starts with --dangerously-skip-permissions;
-# do not ask for a confirmation every time. The container is the sandbox.
-settings["skipDangerousModePermissionPrompt"] = True
 settings["includeCoAuthoredBy"] = False
 settings["autoUpdates"] = False
 if os.environ.get("PI_KEY_LITERAL"):

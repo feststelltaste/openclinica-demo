@@ -99,9 +99,8 @@ The default model is `eu.glm-53-flash`; `eu.deepseek-v4.1-flash` and
 `eu.qwen3.8-flash-next` are available through `/model` in Pi. Claude Code uses
 the same LiteLLM connection through its Anthropic-compatible API: GLM Flash is
 Sonnet (the default), DeepSeek Pro is Opus and Qwen is Haiku in its `/model`
-menu. In the container `claude` is an alias for
-`claude --dangerously-skip-permissions`, so it never asks before running
-commands or editing files; use `command claude` for the normal behavior. The
+menu. Claude Code asks before running commands or editing files; switch to
+auto mode with `Shift+Tab` if you do not want to confirm every step. The
 key is stored only in the home directory of the codespace
 (`~/.pi/agent/models.json`, `~/.claude/settings.json`).
 Maintainers can instead set the Codespaces secrets `LITELLM_URL` and
