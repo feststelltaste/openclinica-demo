@@ -83,7 +83,10 @@ default; do not make this installation public because it uses known credentials.
 
 The container includes the [Pi](https://pi.dev) coding agent with the
 `pi-subagents` extension, [Claude Code](https://claude.com/claude-code), and
-JupyterLab with a Python kernel for notebooks.
+JupyterLab with a Python kernel for notebooks. Notebooks open in the editor
+once you pick the kernel. For the JupyterLab interface run `jupyter lab` in the
+terminal and click port `8888` in the `PORTS` tab; it needs no token and stays
+private to your account.
 
 Pi talks to a LiteLLM instance. Run this once in the terminal and enter the URL
 and API key you were given:

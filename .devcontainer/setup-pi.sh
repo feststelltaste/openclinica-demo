@@ -13,6 +13,15 @@ for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
         echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
 done
 
+# JupyterLab runs without a login token and does not try to open a browser, so
+# `jupyter lab` is enough and clicking port 8888 in the PORTS tab opens it. The
+# port stays private to the owner of the codespace.
+mkdir -p "$HOME/.jupyter"
+cat > "$HOME/.jupyter/jupyter_server_config.py" <<'PY'
+c.IdentityProvider.token = ""
+c.ServerApp.open_browser = False
+PY
+
 # The global npm directory belongs to root in the image, so fall back to sudo.
 npm_global() {
     npm install -g "$@" || sudo npm install -g "$@"
