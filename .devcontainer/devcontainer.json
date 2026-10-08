@@ -11,6 +11,7 @@
         "task.allowAutomaticTasks": "on",
         "chat.disableAIFeatures": true,
         "chat.commandCenter.enabled": false,
+        "chat.agent.enabled": false,
         "github.copilot.enable": {
           "*": false
         },
@@ -25,6 +26,7 @@
       ]
     }
   },
+  "onCreateCommand": "mkdir -p .vscode && cp .devcontainer/vscode/*.json .vscode/",
   "postCreateCommand": "(bash .devcontainer/setup-pi.sh || echo 'Pi setup failed, continuing')",
   "postStartCommand": [
     "bash",

@@ -34,3 +34,5 @@ __pycache__/
 *.py[cod]
 
 docker/db/demo-data.sql.gz
+
+.vscode/
