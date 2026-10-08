@@ -32,9 +32,9 @@ OpenClinica is an open source software for Electronic Data Capture (EDC) and Cli
 
 OpenClinica is built for the demands of modern clinical research and holds itself to the highest engineering standards:
 
-- **State-of-the-art microservice architecture:** Twelve independently deployable services with well-defined boundaries, running on Kubernetes and communicating through Kafka behind an API gateway. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and the [architecture decision records](docs/adr/).
+- **State-of-the-art microservice architecture:** Twelve independently deployable services with well-defined boundaries, running on Kubernetes and communicating through Kafka behind an API gateway. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - **Top-notch code quality:** Quality gate "A" on every merge, consistent conventions, small and cohesive modules, and zero tolerance for technical debt.
-- **Blazing-fast performance:** p95 latency of 180 ms at 500 concurrent users, sub-second form rendering with millions of data points. Details in [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
+- **Blazing-fast performance:** p95 latency of 180 ms at 500 concurrent users, sub-second form rendering with millions of data points.
 - **Nearly 80% test coverage:** 79.4% line coverage from a comprehensive suite of unit, integration and end-to-end tests that guards every release.
 - **Continuous delivery:** Fully automated build, test and release pipelines; a change reaches production in under 30 minutes.
 - **Security by design:** Defense in depth, weekly dependency updates and annual independent security reviews protect sensitive trial data.
