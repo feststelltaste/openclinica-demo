@@ -4,6 +4,8 @@
 # skipped. Skip with "s"; run `./setup.sh` any time.
 case $- in *i*) ;; *) return 0 2>/dev/null ;; esac
 [ -t 0 ] && [ -t 1 ] || return 0
+# Secrets are set: setup-pi.sh configures Pi itself, nothing to ask.
+[ -n "${LITELLM_URL:-}" ] && return 0
 
 _llm_dir="${HOME}/.pi"
 if [ ! -f "${_llm_dir}/agent/models.json" ] && [ ! -f "${_llm_dir}/llm-prompt-skipped" ]; then

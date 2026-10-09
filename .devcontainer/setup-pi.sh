@@ -7,12 +7,6 @@ set -uo pipefail
 
 script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
-# Offer to configure the agents in new terminals until done or skipped.
-for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
-    grep -qF prompt-llm.sh "$rc" 2>/dev/null ||
-        echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
-done
-
 # JupyterLab runs without a login token and does not try to open a browser, so
 # `jupyter lab` is enough and clicking port 8888 in the PORTS tab opens it. The
 # port stays private to the owner of the codespace.
@@ -43,3 +37,11 @@ if command -v pi >/dev/null; then
 fi
 
 bash "$script_dir/configure-pi.sh"
+
+# Offer to configure the agents in new terminals until done or skipped. This
+# comes last: a terminal that opens while this script is still running must not
+# ask for the LiteLLM URL and key before the configuration above had its chance.
+for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    grep -qF prompt-llm.sh "$rc" 2>/dev/null ||
+        echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
+done
