@@ -39,5 +39,6 @@ fi
 
 bash "$script_dir/configure-pi.sh"
 
-# Show only the current directory in the bash prompt, not the whole path.
-grep -qF PROMPT_DIRTRIM "$HOME/.bashrc" 2>/dev/null || echo 'PROMPT_DIRTRIM=1' >> "$HOME/.bashrc"
+# Show only the current directory in the bash prompt. The image already sets
+# PROMPT_DIRTRIM=4 in ~/.bashrc, so this has to be appended after it.
+grep -qxF 'PROMPT_DIRTRIM=1' "$HOME/.bashrc" 2>/dev/null || echo 'PROMPT_DIRTRIM=1' >> "$HOME/.bashrc"
