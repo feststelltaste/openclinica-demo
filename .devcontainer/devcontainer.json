@@ -8,6 +8,7 @@
     "vscode": {
       "settings": {
         "redhat.telemetry.enabled": false,
+        "python.defaultInterpreterPath": "/usr/bin/python3",
         "security.workspace.trust.enabled": false,
         "security.workspace.trust.startupPrompt": "never",
         "terminal.integrated.initialHint": false,
