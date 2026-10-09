@@ -36,3 +36,5 @@ __pycache__/
 docker/db/demo-data.sql.gz
 
 .vscode/
+
+combined.txt
