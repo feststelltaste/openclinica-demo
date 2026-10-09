@@ -42,6 +42,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && npm install -g --ignore-scripts @earendil-works/pi-coding-agent \
     && npm install -g @anthropic-ai/claude-code
 
+# CodeCharta analysis tools (ccsh) for the code maps. They need a JDK, which
+# the image already has (see JAVA_HOME in devcontainer.json).
+ARG CODECHARTA_ANALYSIS_VERSION=2.1.0
+RUN curl -fsSL "https://github.com/MaibornWolff/codecharta/releases/download/ana-${CODECHARTA_ANALYSIS_VERSION}/codecharta-analysis-${CODECHARTA_ANALYSIS_VERSION}.tar" \
+    | tar -x -C /opt --one-top-level=codecharta-analysis --strip-components=1 \
+    && ln -s /opt/codecharta-analysis/bin/ccsh /usr/local/bin/ccsh
+
 # Maven repository with all dependencies, so the first build works offline-fast.
 RUN mkdir -p /home/vscode/.m2 && chown vscode:vscode /home/vscode/.m2
 COPY --from=maven-repository --chown=vscode:vscode /m2repo /home/vscode/.m2/repository

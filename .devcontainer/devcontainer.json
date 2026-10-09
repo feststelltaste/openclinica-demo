@@ -2,6 +2,7 @@
   "name": "OpenClinica",
   "image": "ghcr.io/feststelltaste/openclinica-demo-devcontainer:latest",
   "containerEnv": {
+    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-current",
     "NPM_CONFIG_UPDATE_NOTIFIER": "false"
   },
   "customizations": {
