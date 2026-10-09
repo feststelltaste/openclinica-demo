@@ -1,6 +1,6 @@
 ---
 name: jupyter-notebook
-description: Performs traceable work step by step in Jupyter notebooks using literate programming – data analyses, data transformations, migration scripts, ETL, codebase exploration with generated follow-up artifacts, exploratory investigations, and any other multi-step procedural task where every step from input to result should be understandable. Always use whenever the task involves creating or working in a Jupyter notebook. Triggers: "Jupyter", "notebook", "ipynb", "traceable analysis", "migration script in a notebook", "analyze raw data", "step by step with documentation".
+description: Performs traceable work step by step in Jupyter notebooks using literate programming – data analyses, data transformations, migration scripts, ETL, codebase exploration with generated follow-up artifacts, exploratory investigations, and any other multi-step procedural task where every step from input to result should be understandable. Always use whenever the task involves creating or working in a Jupyter notebook. Trigger phrases - "Jupyter", "notebook", "ipynb", "traceable analysis", "migration script in a notebook", "analyze raw data", "step by step with documentation".
 ---
 
 # Jupyter Notebook: traceable work, step by step
@@ -12,6 +12,31 @@ traceable. Literate programming: text explains, code does.
 Typical uses: data analysis, data cleaning and transformation, migration scripts, ETL, API or
 database exploration, codebase exploration (finding things by heuristics and generating work
 from the hits), one-off investigations, reproducible reports.
+
+## Two kinds of notebook: method and evidence
+
+Decide first which of the two you are writing; the rules below apply to both, but the emphasis differs.
+
+| | **Method notebook** (neutral, reusable) | **Evidence notebook** (specific to one system) |
+|---|---|---|
+| Purpose | A method that can be dropped into other projects and run there | Proof of one analysis of one system, read by people |
+| Specific to | Nothing: all system details are settings in the configuration cell | One system, one commit: names real files, shows real findings |
+| Code examples | Not needed; small inline tests on synthetic cases show the method works | **Required**: code cells that read the real lines and display them (file, line, hit marked), so the reader sees what depends on what |
+| Interpretation | None in the notebook; it stays neutral | **Required**: an interpreted copy (see "After the run") that weighs the results |
+| Markdown | Method and why, never data | Method and why, never data (examples and findings come from code cells and the interpreted copy) |
+| Helpers | As few as possible, so it stays easy to copy | A small helper for display (e.g. showing a source snippet) is fine |
+
+An evidence notebook is usually fed by the scripts of a neutral method. Do not copy system-specific names, numbers or paths into the method notebook; do not strip the examples and interpretation out of an evidence notebook.
+
+### Readable with the code folded
+
+An evidence notebook is read by people who never unfold a code cell, so it must make sense with the code hidden:
+
+- **Fold the code.** Set `metadata["jupyter"] = {"source_hidden": True}` and the tag `hide-input` on every code cell except the configuration cell, which stays open so the reader can see and change the settings.
+- **Every output says what it is.** No bare `(14899, 7)` or unlabeled table: print one sentence first (`print(f"{len(edges):,} edges read from {EDGES_CSV}; the first five:")`), give figures a title, and let tables follow a markdown cell that names them.
+- **A passing check says so.** An assertion that passes shows nothing, so print one line after it (`check passed: ...`); with the code folded this is the only sign that the check ran. Failing stays loud (`assert`).
+- **No library noise** in the outputs (warnings, progress bars); fix the cause or suppress it at the source.
+- Check the result once with `jupyter nbconvert --to markdown --no-input --stdout <file>.ipynb` and read it as the reader would.
 
 ## Core principles
 
@@ -124,6 +149,7 @@ code and why** – in prose, concise, in the language the user is working in.
   transform → analyze → visualize → summary of the approach. For a migration: goal → read source →
   map/transform → preview → apply → verify.
 - The first markdown cell states the goal and the sources (paths, systems – not contents).
+- The only exception is the **interpretation cells of the interpreted copy** (see "After the run: the interpreted copy"): they assess one run and therefore name its numbers. They never go into the original notebook.
 
 ## Code style: procedural, elegant, standard tools
 
@@ -238,11 +264,59 @@ notebook imports must be listed in the install cell. Non-Python tools the notebo
    " notebook.ipynb
    ```
    Do this again after the final execution. A notebook that fails validation is not delivered.
+   **Read the warnings.** The check above only finds errors. After every execution also search the outputs for warnings (`stderr` streams, `Warning` in text outputs, deprecation and
+   `SettingWithCopy` messages) and read each one. Fix the cause (a regex with capture groups, chained indexing, a deprecated argument, a dtype mix); suppress a warning only when it
+   is understood and harmless, and then at the narrowest place with a comment saying why, never globally. Run again until no warning is left, and say in the wrap-up if one remains
+   on purpose.
 6. **Clean up:** remove unused cells and imports, keep cells in logical order, leave no error
    output or debug leftovers.
-7. **Wrap up:** tell the user where the notebook is, what it does (the approach, without
-   inflating it with data values) and what remains open or uncertain (e.g. assumptions made
-   during cleaning or mapping).
+7. **Interpreted copy (evidence notebooks only):** once the notebook has run cleanly and is validated, make the timestamped
+   copy with an assessment of the important results (next section). Method notebooks skip this step; for an evidence notebook skip it only if the user
+   said so.
+8. **Wrap up:** tell the user where the notebook (and, for an evidence notebook, the interpreted copy) is, what the notebook does
+   (the approach, without inflating it with data values), the main points of the assessment, and what
+   remains open or uncertain (e.g. assumptions made during cleaning or mapping).
+
+## After the run: the interpreted copy
+
+**Only for evidence notebooks** (see "Two kinds of notebook"). A method notebook gets no interpreted copy; it stays free of findings so it can be reused elsewhere.
+
+When the evidence notebook has run top to bottom without errors and passed validation, make a **copy that adds an assessment of the results**. The original stays as it is: its markdown is free of
+data, it is the one source and it can be re-run. The copy documents one run.
+
+1. **Copy** the executed notebook next to the original as `<topic>-<YYYYMMDD-HHMMSS>-<version>.ipynb`. `<version>` is the version state of the repository: the short commit hash
+   (`git rev-parse --short HEAD`), with `-dirty` appended if there are uncommitted changes (`git status --porcelain` is not empty), or `nogit` outside a Git repository. Take the
+   timestamp from the clock when the copy is made. Never overwrite an earlier copy, and do not run the copy again: it keeps the outputs of the run it documents. Directly under the
+   title add one marked cell that says when the copy was made, from which repository state and from which notebook.
+2. **Read the copy from top to bottom.** Read every output, and look at each figure with the image viewer instead of guessing from the code. After each **important** result add one
+   **interpretation cell**. Important means: what answers the question of the notebook, a surprising value, a result that rests on a heuristic or a sample, a check that passed
+   narrowly. Not every `head()` and not every intermediate table.
+3. **End with an overall assessment cell** at the bottom: the answer to the question of the notebook, how far to trust it, and what to do or check next.
+4. **Mark every interpretation cell the same way**, so that it can be told from the author's markdown at a glance: a light-blue box, and the tag `interpretation` in the cell
+   metadata so that the cells can be found or removed again. Use exactly this form (the blank lines inside the box are needed for the Markdown in it to render):
+
+   ```
+   <div style="background:#e8f1fb; border-left:4px solid #2a78d6; padding:8px 14px; color:#1d1f23;">
+
+   **Interpretation**
+
+   ...the text...
+
+   </div>
+   ```
+
+   With `nbformat`: `cell = nbf.v4.new_markdown_cell(text); cell.metadata["tags"] = ["interpretation"]`, inserted after the code cell whose result it assesses. The text colour is
+   set so that the box stays readable in a dark theme.
+5. **Validate the copy** with `nbformat` as in the workflow. The code cells and their outputs must be the same as in the original; only the marked cells are new.
+
+What an interpretation says, and does not say:
+
+- **What the result shows**, with the concrete numbers from the output (here numbers belong: the cell assesses this one run), then **what it means for the question**, **how far to trust
+  it** (sample or full data, heuristic or measured, checks done or not, missing data) and **what would change the conclusion**.
+- Keep **observation, inference and open question apart**, as separate short parts or clearly labelled sentences.
+- Write only what the outputs support. Mark a guess as a guess. Do not name a cause that the notebook did not examine.
+- Short: a few sentences that can be read in a minute. In the language the user works in.
+- The author's cells are not changed, moved or removed.
 
 ## Where notebooks live
 
@@ -251,12 +325,13 @@ notebook (named after its topic, kebab-case):
 
 ```
 notebooks/<topic>/<topic>.ipynb
+notebooks/<topic>/<topic>-<YYYYMMDD-HHMMSS>-<version>.ipynb   # interpreted copies, one per documented run
 notebooks/<topic>/output/        # everything the notebook generates (OUTPUT_DIR = "output")
 ```
 
 Paths in the configuration cell for outputs are relative to the notebook, so the notebook and
 its results stay together. Generated output that can be reproduced by re-running the notebook
-may be added to `.gitignore`; suggest it to the user, don't decide silently. Run
+may be added to `.gitignore`; suggest it to the user, don't decide silently. The interpreted copies are results of a run, not sources: whether to keep them in version control is the user's decision too. Run
 `jupyter nbconvert` from the notebook's directory.
 
 ## Notebook skeleton (orientation, adapt to the task)
@@ -284,3 +359,6 @@ may be added to `.gitignore`; suggest it to the user, don't decide silently. Run
 - No huge catch-all cells; no loops and no `def` helper functions where pandas can do it directly.
 - Don't import packages that the bash install cell doesn't install.
 - Don't deliver a notebook that hasn't run completely at least once.
+- Don't leave warnings in the outputs unread: read them, fix the cause, or suppress them narrowly with a reason. No global `warnings.filterwarnings("ignore")`.
+- Don't write interpretation into the original notebook, don't re-run the interpreted copy, and don't interpret every cell: only the important results, each in a marked light-blue cell.
+- Don't interpret from the code alone: read the outputs and look at the figures first.
