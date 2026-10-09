@@ -8,7 +8,6 @@
     "vscode": {
       "settings": {
         "redhat.telemetry.enabled": false,
-        "task.allowAutomaticTasks": "on",
         "chat.disableAIFeatures": true,
         "chat.commandCenter.enabled": false,
         "chat.agent.enabled": false,

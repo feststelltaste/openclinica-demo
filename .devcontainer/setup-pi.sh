@@ -23,8 +23,12 @@ c.ServerApp.open_browser = False
 PY
 
 # The global npm directory belongs to root in the image, so fall back to sudo.
+# Every network step is bounded and gets no stdin, so a stuck download or an
+# interactive prompt cannot block the codespace creation (and with it the
+# postStartCommand that starts OpenClinica).
 npm_global() {
-    npm install -g "$@" || sudo npm install -g "$@"
+    timeout 180 npm install -g "$@" </dev/null ||
+        timeout 180 sudo -n npm install -g "$@" </dev/null
 }
 
 command -v pi >/dev/null ||
@@ -35,7 +39,7 @@ command -v claude >/dev/null ||
     echo "Could not install Claude Code."
 
 if command -v pi >/dev/null; then
-    pi install npm:pi-subagents || echo "Could not install pi-subagents."
+    timeout 120 pi install npm:pi-subagents </dev/null || echo "Could not install pi-subagents."
 fi
 
 bash "$script_dir/configure-pi.sh"
