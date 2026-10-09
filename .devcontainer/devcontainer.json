@@ -8,6 +8,9 @@
     "vscode": {
       "settings": {
         "redhat.telemetry.enabled": false,
+        "security.workspace.trust.enabled": false,
+        "security.workspace.trust.startupPrompt": "never",
+        "terminal.integrated.initialHint": false,
         "chat.disableAIFeatures": true,
         "chat.commandCenter.enabled": false,
         "chat.agent.enabled": false,
