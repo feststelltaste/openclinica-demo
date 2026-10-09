@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Installs the Pi coding agent and Claude Code if the image does not have them
 # yet, adds the pi-subagents extension and, if LITELLM_URL is set (Codespaces
-# secrets), configures both via configure-pi.sh. Failures of single steps are
+# secrets), configures both via configure-pi.sh. Without the secrets, the
+# participants run ./setup.sh themselves. Failures of single steps are
 # reported but do not stop the following ones.
 set -uo pipefail
 
@@ -37,11 +38,3 @@ if command -v pi >/dev/null; then
 fi
 
 bash "$script_dir/configure-pi.sh"
-
-# Offer to configure the agents in new terminals until done or skipped. This
-# comes last: a terminal that opens while this script is still running must not
-# ask for the LiteLLM URL and key before the configuration above had its chance.
-for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
-    grep -qF prompt-llm.sh "$rc" 2>/dev/null ||
-        echo "_oc_devcontainer_dir=\"$script_dir\"; . \"\$_oc_devcontainer_dir/prompt-llm.sh\"; unset _oc_devcontainer_dir" >> "$rc"
-done
