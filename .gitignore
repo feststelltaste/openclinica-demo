@@ -38,3 +38,9 @@ docker/db/demo-data.sql.gz
 .vscode/
 
 combined.txt
+
+# Jupyter / generated
+.virtual_documents/
+.ipynb_checkpoints/
+combined.txt
+notebooks/
