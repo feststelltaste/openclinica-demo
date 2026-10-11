@@ -11,6 +11,7 @@
         "redhat.telemetry.enabled": false,
         "editor.mouseWheelZoom": true,
         "terminal.integrated.mouseWheelZoom": true,
+        "terminal.integrated.copyOnSelection": true,
         "python.defaultInterpreterPath": "/usr/bin/python3",
         "security.workspace.trust.enabled": false,
         "security.workspace.trust.startupPrompt": "never",
