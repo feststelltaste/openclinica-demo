@@ -228,3 +228,16 @@ editing files; press `Shift+Tab` to switch to auto mode.
 
 The key is stored only in your codespace (`~/.pi/agent/models.json` and
 `~/.claude/settings.json`). Do not commit it.
+
+## Several agents in parallel with worktrees
+
+A worktree gives an agent its own folder and branch, so several branches are
+checked out at the same time and the agents do not get in each other's way.
+
+- Claude Code and Pi: `claude --worktree <name>` or `pi --worktree <name>`,
+  short `-w`. The worktrees are in `.claude/worktrees/<name>` and
+  `.pi/worktrees/<name>` and are ignored by git.
+- To see the changes, open the worktree in its own VS Code tab or window, for example
+  from the agent with `!code .` or in the terminal with
+  `code .pi/worktrees/<name>`.
+- Then switch to the new tab or window and develop (or let the agent develop) there.

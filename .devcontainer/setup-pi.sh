@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Installs the Pi coding agent and Claude Code if the image does not have them
-# yet, adds the pi-subagents extension and, if LITELLM_URL is set (Codespaces
+# yet, adds the pi-subagents and pi-worktree-extension extensions and, if LITELLM_URL is set (Codespaces
 # secrets), configures both via configure-pi.sh. Without the secrets, the
 # participants run ./setup.sh themselves. Failures of single steps are
 # reported but do not stop the following ones.
@@ -37,9 +37,14 @@ command -v claude >/dev/null ||
 
 if command -v pi >/dev/null; then
     timeout 120 pi install npm:pi-subagents </dev/null || echo "Could not install pi-subagents."
+    timeout 120 pi install npm:pi-worktree-extension </dev/null || echo "Could not install pi-worktree-extension."
 fi
 
 bash "$script_dir/configure-pi.sh"
+
+# `pi -w <name>` starts Pi in its own git worktree (needs the shell function).
+grep -qF 'pi-worktree.sh' "$HOME/.bashrc" 2>/dev/null ||
+    echo "source \"$script_dir/pi-worktree.sh\"" >> "$HOME/.bashrc"
 
 # Show only the current directory in the bash prompt. The image already sets
 # PROMPT_DIRTRIM=4 in ~/.bashrc, so this has to be appended after it.

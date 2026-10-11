@@ -44,3 +44,7 @@ combined.txt
 .ipynb_checkpoints/
 combined.txt
 notebooks/
+
+# agent worktrees (Claude Code, Pi)
+.claude/worktrees/
+.pi/worktrees/
