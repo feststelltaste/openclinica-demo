@@ -30,7 +30,94 @@ Good to know:
   JupyterLab interface run `jupyter lab` in the terminal and open port `8888`
   in the `PORTS` tab; it needs no token.
 
+## Dev Container on your own computer
+
+If you do not want to use a codespace, you can run the same environment (JDK,
+Maven, Docker, the coding agents and JupyterLab) as a Dev Container on your own
+computer. You need:
+
+- [Docker](https://docs.docker.com/get-docker/) with at least 4 CPU cores and
+  8 GB RAM available
+- [Git](https://git-scm.com/) and [VS Code](https://code.visualstudio.com/) with
+  the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+  extension
+
+1. Clone the repository and open it in VS Code:
+
+   ```bash
+   git clone https://github.com/feststelltaste/openclinica-demo.git
+   code openclinica-demo
+   ```
+
+2. Run `Dev Containers: Reopen in Container` from the command palette (`F1`).
+   The first start pulls the image and takes a few minutes.
+3. When the container is up, it starts the demo installation (PostgreSQL and
+   OpenClinica) automatically. The terminal prints the URL; open
+   <http://127.0.0.1:8080/OpenClinica/MainMenu> and sign in with
+   `root` / `openclinica`.
+4. Set up the coding agent as described in
+   [Coding agent with LiteLLM](#coding-agent-with-litellm). Unlike in a
+   codespace, run `./setup.sh` yourself and enter the URL and key.
+
+To build and run your own code changes inside the Dev Container, stop the demo
+installation first (it uses the same port 8080) and use the rebuild script:
+
+```bash
+docker compose -f docker/docker-compose.demo.yml down
+bash docker/rebuild.sh
+```
+
+### Dev Container with Bash only (no VS Code)
+
+You can also start the Dev Container from a shell with the
+[Dev Container CLI](https://github.com/devcontainers/cli). You need Docker, Git
+and Node.js (for `npm`). The steps use Bash syntax. They are tested on WSL2
+with Docker Engine; Linux works the same way, macOS is untested.
+
+```bash
+git clone https://github.com/feststelltaste/openclinica-demo.git
+cd openclinica-demo
+npm install -g @devcontainers/cli
+devcontainer up --workspace-folder .
+devcontainer exec --workspace-folder . /bin/bash
+```
+
+The last command opens a shell inside the container; run it again in a second
+terminal whenever you need another one. Inside the shell JDK, Maven, Docker,
+`pi`, `claude` and `jupyter` are available, and `./setup.sh` sets up the coding
+agent.
+
+Two differences to VS Code:
+
+- Start the demo installation yourself if it is not running yet (the container
+  start is supposed to do it, but check with
+  `docker compose -f docker/docker-compose.demo.yml ps`):
+
+  ```bash
+  docker compose -f docker/docker-compose.demo.yml up -d
+  ```
+
+- The CLI does not forward ports. Inside the container `curl` reaches
+  `http://localhost:8080` directly; for your browser, publish the port from a
+  shell on your computer (not in the container). Pick a free host port if 8080 is
+  taken, here `18080`:
+
+  ```bash
+  ip=$(docker inspect "$(docker ps -q --filter label=devcontainer.local_folder="$PWD")" \
+    --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
+  docker run -d --rm --name oc-forward -p 18080:8080 alpine/socat \
+    tcp-listen:8080,fork,reuseaddr tcp-connect:$ip:8080
+  ```
+
+  Then open <http://127.0.0.1:18080/OpenClinica/MainMenu>. Remove the forward
+  with `docker rm -f oc-forward`.
+
+To stop and remove the container: `docker rm -f $(docker ps -aq --filter label=devcontainer.local_folder="$PWD")`.
+
 ## Demo installation on your own computer
+
+This variant needs no Dev Container: only Docker with Docker Compose, directly
+on your machine. Use the section above if you want the complete tool set.
 
 This is the quickest way to try OpenClinica locally. It uses a prebuilt image
 of a released demo version, so neither Maven nor a JDK is needed. Only Docker
