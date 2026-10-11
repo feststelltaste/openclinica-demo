@@ -21,6 +21,8 @@ PY
 # Every network step is bounded and gets no stdin, so a stuck download or an
 # interactive prompt cannot block the codespace creation (and with it the
 # postStartCommand that starts OpenClinica).
+export NPM_CONFIG_PROGRESS=false
+
 npm_global() {
     timeout 180 npm install -g "$@" </dev/null ||
         timeout 180 sudo -n npm install -g "$@" </dev/null
