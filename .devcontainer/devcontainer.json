@@ -39,7 +39,7 @@
   "postStartCommand": [
     "bash",
     "-c",
-    "for i in $(seq 1 60); do docker info >/dev/null 2>&1 && break; echo 'Waiting for Docker daemon...'; sleep 2; done; source docker/demo/base-url.sh && docker compose --progress plain -f docker/docker-compose.demo.yml up -d && bash docker/demo/print-url.sh"
+    "for i in $(seq 1 60); do docker info >/dev/null 2>&1 && break; echo 'Waiting for Docker daemon...'; sleep 2; done; source docker/demo/base-url.sh && for i in 1 2 3 4; do docker compose --progress plain -f docker/docker-compose.demo.yml up -d && break; [ $i -eq 4 ] && exit 1; echo \"Image pull failed, retrying ($i/3)...\"; sleep 5; done && bash docker/demo/print-url.sh"
   ],
   "secrets": {
     "LITELLM_URL": {
