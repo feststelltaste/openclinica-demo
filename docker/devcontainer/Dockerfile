@@ -8,7 +8,10 @@ RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apac
     | tar -xz -C /opt \
     && ln -s /opt/apache-maven-3.9.9/bin/mvn /usr/local/bin/mvn
 COPY . /src
-RUN cd /src && mvn -B -q -DskipTests -Dmaven.repo.local=/m2repo package
+# verify runs the jQAssistant scan and analyze goals, the server goal (it ends
+# at once because stdin is closed) fetches the embedded Neo4j and its browser.
+RUN cd /src && mvn -B -q -DskipTests -Dmaven.repo.local=/m2repo verify \
+    && mvn -B -q -N -Dmaven.repo.local=/m2repo jqassistant:server </dev/null
 
 FROM mcr.microsoft.com/devcontainers/java:1-17-bookworm
 
@@ -33,6 +36,15 @@ RUN python3 -m venv /opt/jupyter \
     && /opt/jupyter/bin/pip install --no-cache-dir jupyterlab ipykernel \
     && ln -s /opt/jupyter/bin/jupyter /usr/local/bin/jupyter \
     && ln -s /opt/jupyter/bin/jupyter-lab /usr/local/bin/jupyter-lab
+
+# uv runs the Neo4j MCP server (see .mcp.json and .pi/mcp.json). The server is
+# fetched into a shared cache now, so that it starts without a download.
+ENV UV_CACHE_DIR=/opt/uv-cache
+RUN /opt/jupyter/bin/pip install --no-cache-dir uv \
+    && ln -s /opt/jupyter/bin/uv /usr/local/bin/uv \
+    && ln -s /opt/jupyter/bin/uvx /usr/local/bin/uvx \
+    && uvx mcp-neo4j-cypher==0.6.0 --help >/dev/null \
+    && chmod -R a+rwX /opt/uv-cache
 
 # Node.js, the Pi coding agent and Claude Code. This is installed here and not with the
 # Dev Container node feature because features are applied after this file.
