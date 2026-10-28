@@ -5,6 +5,10 @@
 # LITELLM_API is optional: openai-completions (default), openai-responses,
 # anthropic-messages or google-generative-ai.
 # Alternatively set only OPENROUTER_API_KEY to use OpenRouter.
+# OPENROUTER_PROVIDERS is optional: comma-separated OpenRouter provider slugs
+# that requests are restricted to (default: cerebras, "any" = no restriction).
+# OPENROUTER_FALLBACK=1 only prefers them and lets OpenRouter fall back to other
+# providers if none of them can serve the request.
 # LLM_PROVIDER is optional: litellm or openrouter, otherwise taken from the URL.
 set -euo pipefail
 
@@ -111,6 +115,32 @@ default = "qwen/qwen3.8-27b" if provider == "openrouter" else MODELS[0][0]
 model = os.environ.get("LITELLM_MODEL") or default
 if model not in ids:
     model = ids[0]
+
+if provider == "openrouter":
+    slugs = [p.strip() for p in (os.environ.get("OPENROUTER_PROVIDERS") or "cerebras").split(",") if p.strip()]
+    if slugs != ["any"]:
+        # Sent as the provider field of every request. Strict: a model that none
+        # of the providers serves fails instead of going elsewhere.
+        fallback = os.environ.get("OPENROUTER_FALLBACK") == "1"
+        routing = {"order": slugs, "allow_fallbacks": True} if fallback else {"only": slugs, "allow_fallbacks": False}
+        for m in models_list:
+            m["compat"] = {"openRouterRouting": routing}
+        # The providers may serve less context than the model offers (Cerebras
+        # 64k of 1M), so take the limit from their endpoints of the default model.
+        try:
+            eps = json.load(urllib.request.urlopen(urllib.request.Request(
+                base + "/models/" + model + "/endpoints",
+                headers={"Authorization": "Bearer " + key}), timeout=15))["data"]["endpoints"]
+        except Exception:
+            eps = []
+        ctx = [e["context_length"] for e in eps
+               if (e.get("tag") or "").split("/")[0] in slugs and e.get("context_length")]
+        if not ctx and not fallback:
+            print(f"Warning: {model} is not offered by {', '.join(slugs)} on OpenRouter.")
+        for m in models_list:
+            if m["id"] == model and ctx and not fallback:
+                m["contextWindow"] = min(ctx)
+        print("OpenRouter providers: " + ", ".join(slugs) + (" (others as fallback)" if fallback else " only"))
 
 models = {
     "providers": {
