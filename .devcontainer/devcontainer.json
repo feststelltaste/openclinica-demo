@@ -47,6 +47,9 @@
     },
     "LITELLM_API_KEY": {
       "description": "API key for the LLM API used by the Pi coding agent"
+    },
+    "OPENROUTER_API_KEY": {
+      "description": "OpenRouter API key, used instead of LITELLM_URL and LITELLM_API_KEY when those are not set"
     }
   },
   "forwardPorts": [
