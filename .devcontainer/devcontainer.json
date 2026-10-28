@@ -50,12 +50,17 @@
     }
   },
   "forwardPorts": [
-    8080
+    8080,
+    7687
   ],
   "portsAttributes": {
     "8080": {
       "label": "OpenClinica",
       "protocol": "http",
+      "onAutoForward": "silent"
+    },
+    "7687": {
+      "label": "Neo4j Bolt (jQAssistant)",
       "onAutoForward": "silent"
     }
   },
