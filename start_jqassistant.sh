@@ -19,12 +19,12 @@ fi
 if [[ -n "${CODESPACE_NAME:-}" ]]; then
     domain="${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-app.github.dev}"
     cat <<EOF
-Open   https://${CODESPACE_NAME}-7474.${domain}/index.html
-Connect to bolt+s://${CODESPACE_NAME}-7687.${domain}:443 with "No authentication"
+Open https://${CODESPACE_NAME}-7474.${domain}/index.html?dbms=bolt%2Bs%3A%2F%2F${CODESPACE_NAME}-7687.${domain}%3A443&preselectAuthMethod=NO_AUTH
+If the connection form still shows localhost, enter bolt+s://${CODESPACE_NAME}-7687.${domain}:443 with "No authentication".
 (add ports 7474 and 7687 in the Ports tab if they are missing)
 EOF
 else
-    echo "Open http://localhost:7474/index.html and connect to bolt://localhost:7687"
+    echo "Open http://localhost:7474/index.html?dbms=bolt%3A%2F%2Flocalhost%3A7687&preselectAuthMethod=NO_AUTH"
 fi
 
 exec mvn --batch-mode jqassistant:server
