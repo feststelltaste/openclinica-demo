@@ -111,7 +111,7 @@ if not models_list:
     models_list = [{"id": i, "name": n, "contextWindow": c} for i, n, c in MODELS]
 ids = [m["id"] for m in models_list]
 
-default = "qwen/qwen3.8-27b" if provider == "openrouter" else MODELS[0][0]
+default = "qwen/qwen3.8-27b" if provider == "openrouter" else "eu.deepseek-v4.1-flash"
 model = os.environ.get("LITELLM_MODEL") or default
 if model not in ids:
     model = ids[0]

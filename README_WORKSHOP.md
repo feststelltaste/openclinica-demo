@@ -209,7 +209,8 @@ The workshop uses the coding agents [Pi](https://pi.dev) (`pi`) and
 LiteLLM instance, so you need its URL and an API key from the workshop team.
 
 Run the setup once in the terminal and enter the URL, the API key and, if you
-like, a different default model (press Enter for `eu.glm-53-flash`):
+like, a different default model (press Enter for `eu.deepseek-v4.1-flash` in Pi
+and `eu.qwen3.8-flash-next` in Claude Code):
 
 ```bash
 ./setup.sh
@@ -220,11 +221,10 @@ check fails, it offers to ask for the values again. The first terminal of a new
 codespace offers to run it for you; type `s` to skip. Afterwards start an agent
 with `pi` or `claude`.
 
-Available models: `eu.glm-53-flash` (default), `eu.deepseek-v4.1-flash` and
-`eu.qwen3.8-flash-next`. In Pi switch with `/model`. In Claude Code the same
-models appear in the `/model` menu as Sonnet (GLM Flash, default), Opus
-(DeepSeek) and Haiku (Qwen). Claude Code asks before running commands or
-editing files; press `Shift+Tab` to switch to auto mode.
+Available models: `eu.deepseek-v4.1-flash` (default in Pi), `eu.glm-53-flash`
+and `eu.qwen3.8-flash-next`. In Pi switch with `/model`. Claude Code uses Qwen
+Flash for everything, including background tasks. Claude Code asks before
+running commands or editing files; press `Shift+Tab` to switch to auto mode.
 
 The key is stored only in your codespace (`~/.pi/agent/models.json` and
 `~/.claude/settings.json`). Do not commit it.

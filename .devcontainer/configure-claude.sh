@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Points Claude Code at LiteLLM or OpenRouter (their Anthropic-compatible
 # /v1/messages API). Called by configure-pi.sh with the same LITELLM_* variables.
-# On LiteLLM the three models fill Claude Code's model slots: Sonnet = GLM Flash
-# (default), Opus = DeepSeek Pro, Haiku (background tasks) = Qwen. Claude Code
-# only knows these slots, so on OpenRouter all three use the default model.
+# Every model slot (Sonnet, Opus, Haiku, Fable) and every background model uses
+# the default model: Qwen Flash on LiteLLM, qwen/qwen3.8-27b on OpenRouter.
+# All of them are pinned, because an unpinned one would ask for a real Claude
+# model, which OpenRouter serves and bills.
 set -euo pipefail
 
 mkdir -p "$HOME/.claude"
@@ -23,14 +24,9 @@ def load(path):
         return {}
 
 
-# eu.deepseek-v4.1-flash is left out on purpose: the gateway answers 403 for it
-# on /v1/messages (it works on /v1/chat/completions, which Pi uses).
-glm, deepseek, qwen = "eu.glm-53-flash", "eu.deepseek-v4-pro", "eu.qwen3.8-flash-next"
 openrouter = (os.environ.get("LLM_PROVIDER") or
               ("openrouter" if "openrouter.ai" in os.environ["LITELLM_URL"] else "litellm")) == "openrouter"
-default = os.environ.get("LITELLM_MODEL") or ("qwen/qwen3.8-27b" if openrouter else glm)
-if openrouter:
-    glm = deepseek = qwen = default
+default = os.environ.get("LITELLM_MODEL") or ("qwen/qwen3.8-27b" if openrouter else "eu.qwen3.8-flash-next")
 
 settings = load(settings_path)
 env = settings.setdefault("env", {})
@@ -38,9 +34,13 @@ env.update({
     # Claude Code adds /v1/messages itself, so the OpenAI-style /v1 must go.
     "ANTHROPIC_BASE_URL": os.environ["LITELLM_URL"].rstrip("/").removesuffix("/v1"),
     "ANTHROPIC_MODEL": default,
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": glm,
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": deepseek,
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": qwen,
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": default,
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": default,
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": default,
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": default,
+    "ANTHROPIC_SMALL_FAST_MODEL": default,
+    "CLAUDE_CODE_AUTO_MODE_MODEL": default,
+    "CLAUDE_CODE_BG_CLASSIFIER_MODEL": default,
     "CLAUDE_CODE_SUBAGENT_MODEL": default,
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
